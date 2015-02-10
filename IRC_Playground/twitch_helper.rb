@@ -13,7 +13,9 @@ class TwitchHelper
     when /^!kick$/
       self.move(m, :kick)
     else
-      puts "Invalid Command"
+      5.times { puts }
+      puts "ECE477: Invalid Command"
+      5.times { puts }
     end
   end
 
