@@ -114,8 +114,11 @@ APP_DATA appData;
 void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
-    appData.state = APP_STATE_INIT;
+    appData.state = STATE_CAM_WAKE;
     
+    /* Initialize camera structure */
+    cam_data_initialize(&appData.cam_data);
+
     /* TODO: Initialize your application's state machine and other
      * parameters.
      */
@@ -136,8 +139,9 @@ void APP_Tasks ( void )
     switch ( appData.state )
     {
         /* Application's initial state. */
-        case APP_STATE_INIT:
+        case STATE_CAM_WAKE:
         {
+            cam_wake(&appData.cam_data);
             break;
         }
 

@@ -58,6 +58,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
+#include "camera.h"
+#include "command.h"
+#include "wifi.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,49 +68,36 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
-// *****************************************************************************
-/* Application states
-
-  Summary:
-    Application states enumeration
-
-  Description:
-    This enumeration defines the valid application states.  These states
-    determine the behavior of the application at various times.
-*/
-
 typedef enum
 {
-	/* Application's state machine's initial state. */
-	APP_STATE_INIT=0,
-
-	/* TODO: Define states used by the application state machine. */
+	/* Wake up the camera */
+	STATE_CAM_WAKE,
+        /* Send initialization commands to camera */
+        STATE_CAM_INIT,
+        /* Receive an image from the camera */
+        STATE_CAM_RECEIVE
 
 } APP_STATES;
-
-
-// *****************************************************************************
-/* Application Data
-
-  Summary:
-    Holds application data
-
-  Description:
-    This structure holds the application's data.
-
-  Remarks:
-    Application strings and buffers are be defined outside this structure.
- */
 
 typedef struct
 {
     /* The application's current state */
     APP_STATES state;
 
-    /* TODO: Define any additional data used by the application. */
-
+    /* Camera data */
+    CAM_DATA cam_data;
+    
+    /* Flag set when a command has completed */
+    bool cmd_complete;
 
 } APP_DATA;
+
+typedef struct
+{
+    /* USART handle for WiFi module */
+    DRV_HANDLE wifi_handle;
+
+} APP_DRV_OBJECTS;
 
 
 // *****************************************************************************
