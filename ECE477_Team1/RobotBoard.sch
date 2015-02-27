@@ -9276,6 +9276,44 @@ Source: 008-0260-0_E.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="Johanson_antenna">
+<packages>
+<package name="2450AT18A100">
+<smd name="P$1" x="-1.7" y="0" dx="0.8" dy="1.6" layer="1"/>
+<smd name="P$2" x="1.7" y="0" dx="0.8" dy="1.6" layer="1"/>
+<rectangle x1="-1.2" y1="-0.3" x2="0" y2="0.3" layer="21"/>
+<text x="-2.54" y="-2.54" size="1.27" layer="25">&gt;NAME</text>
+</package>
+</packages>
+<symbols>
+<symbol name="2450AT18A100">
+<wire x1="0" y1="0" x2="-2.54" y2="3.81" width="0.254" layer="94"/>
+<wire x1="-2.54" y1="3.81" x2="0" y2="3.81" width="0.254" layer="94"/>
+<wire x1="0" y1="3.81" x2="2.54" y2="3.81" width="0.254" layer="94"/>
+<wire x1="2.54" y1="3.81" x2="0" y2="0" width="0.254" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="3.81" width="0.254" layer="94"/>
+<text x="3.81" y="1.27" size="1.778" layer="95">&gt;NAME</text>
+<pin name="P$1" x="0" y="-5.08" visible="pad" length="middle" rot="R90"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="2450AT18A100">
+<gates>
+<gate name="G$1" symbol="2450AT18A100" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="2450AT18A100">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -9410,6 +9448,7 @@ Source: 008-0260-0_E.pdf</description>
 <part name="R4" library="SparkFun03_30_09" deviceset="RESISTOR" device="0402" value="10K"/>
 <part name="GND4" library="SparkFun-Aesthetics" deviceset="GND" device=""/>
 <part name="R5" library="SparkFun03_30_09" deviceset="RESISTOR" device="0402" value="1K"/>
+<part name="ANT" library="Johanson_antenna" deviceset="2450AT18A100" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -9747,6 +9786,7 @@ Source: 008-0260-0_E.pdf</description>
 <instance part="R4" gate="G$1" x="73.66" y="20.32" rot="R90"/>
 <instance part="GND4" gate="1" x="73.66" y="10.16"/>
 <instance part="R5" gate="G$1" x="-91.44" y="48.26" rot="R180"/>
+<instance part="ANT" gate="G$1" x="154.94" y="58.42"/>
 </instances>
 <busses>
 </busses>
@@ -11162,6 +11202,14 @@ Source: 008-0260-0_E.pdf</description>
 <wire x1="-83.82" y1="43.18" x2="-83.82" y2="48.26" width="0.1524" layer="91"/>
 <junction x="-83.82" y="48.26"/>
 <pinref part="R5" gate="G$1" pin="1"/>
+</segment>
+</net>
+<net name="N$18" class="0">
+<segment>
+<pinref part="WIFI" gate="G$1" pin="ANT"/>
+<wire x1="162.56" y1="27.94" x2="154.94" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="27.94" x2="154.94" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="ANT" gate="G$1" pin="P$1"/>
 </segment>
 </net>
 </nets>
