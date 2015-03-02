@@ -36,12 +36,12 @@
       <Path>/framework/system/ports</Path>
     </File>
     <File>
-      <Name>sys_devcon.c</Name>
-      <Path>/framework/system/devcon/src</Path>
-    </File>
-    <File>
       <Name>bsp_config.h</Name>
       <Path>/bsp/pic32mz_ec_pim+e16</Path>
+    </File>
+    <File>
+      <Name>sys_devcon.c</Name>
+      <Path>/framework/system/devcon/src</Path>
     </File>
     <File>
       <Name>sys_devcon_cache.h</Name>
@@ -61,10 +61,6 @@
     </File>
     <File>
       <Name>drv_usart_read_write.c</Name>
-      <Path>/framework/driver/usart/src/dynamic</Path>
-    </File>
-    <File>
-      <Name>drv_usart_buffer_queue.c</Name>
       <Path>/framework/driver/usart/src/dynamic</Path>
     </File>
     <File>
@@ -109,7 +105,7 @@
     <Template>
       <Name>system_config.h</Name>
       <Path>app/system_config/default</Path>
-      <Checksum>3DBF9E26882DFB5902D39250B84B82F4</Checksum>
+      <Checksum>8CFA6DFFE63290444E77A4A28E37A410</Checksum>
     </Template>
     <Template>
       <Name>system_definitions.h</Name>

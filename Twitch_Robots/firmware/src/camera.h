@@ -28,13 +28,39 @@
 // *****************************************************************************
 
 #define CAM_COMMAND_LENGTH 6
-#define CAM_DATA_ARRAY_SIZE 512
+#define CAM_DATA_ARRAY_SIZE 512 * 10
 #define CAM_USART_ID USART_ID_2
 #define CAM_SUCCESS true
 #define CAM_FAIL false
-#define CAM_MAX_SYNC_ATTEMPTS 50
 
+#define CAM_MAX_SYNC_ATTEMPTS 50
+#define CAM_MAX_ACK_RECEIVE_ATTEMPTS 10
+#define CAM_ACK_FAILED 0xFF
+
+#define CAM_CMD_ID_INITIAL 0x01
+#define CAM_CMD_ID_GET_PICTURE 0x04
+#define CAM_CMD_ID_SET_PACKAGE_SIZE 0x06
+#define CAM_CMD_ID_DATA 0x0A
 #define CAM_CMD_ID_SYNC 0x0D
+#define CAM_CMD_ID_ACK 0x0E
+
+#define CAM_SIZE_512_LOW_BYTE 0x00
+#define CAM_SIZE_512_HIGH_BYTE 0x02
+
+#define CAM_RESOLUTION_160x128 0x03
+#define CAM_RESOLUTION_320x240 0x05
+#define CAM_RESOLUTION_640x480 0x07
+
+#define CAM_INITIAL_JPEG 0x07
+#define CAM_GET_PICTURE_JPEG 0x05
+
+#define CAM_PACKAGE_ID_SIZE 2
+#define CAM_PACKAGE_DATA_SIZE 2
+#define CAM_PACKAGE_IMAGE_SIZE 512 - 6
+#define CAM_PACKAGE_VERIFY_SIZE 2
+
+#define CAM_PACKAGE_FINAL 0xF0
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -92,6 +118,15 @@ bool cam_send_package_size(CAM_DATA* cam_data);
 
 /* Send a GET PICTURE command to receive a DATA packet and multiple image data packages */
 bool cam_send_get_picture(CAM_DATA* cam_data);
+
+/* Wait until an ACK is received or for a number of tries to allow processing time */
+uint8_t cam_receive_ack(CAM_DATA* cam_data);
+
+/* Receive a DATA response and return the number of packages to expect */
+bool cam_receive_data_cmd(CAM_DATA* cam_data);
+
+/* Receive an image data package and put it into the data array */
+bool cam_receive_package(CAM_DATA* cam_data);
 
 #endif	/* CAMERA_H */
 

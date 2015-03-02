@@ -158,8 +158,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define DRV_USART_INTERRUPT_MODE                    false
 #define DRV_USART_BYTE_MODEL_SUPPORT                false
 #define DRV_USART_READ_WRITE_MODEL_SUPPORT          true
-#define DRV_USART_BUFFER_QUEUE_SUPPORT              true
-#define DRV_USART_QUEUE_DEPTH_COMBINED              16
+#define DRV_USART_BUFFER_QUEUE_SUPPORT              false
 #define DRV_USART_CLIENTS_NUMBER                    2
 #define DRV_USART_SUPPORT_TRANSMIT_DMA              false
 #define DRV_USART_SUPPORT_RECEIVE_DMA               false

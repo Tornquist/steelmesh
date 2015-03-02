@@ -135,22 +135,43 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
-    /* Check the application's current state. */
     switch ( appData.state )
     {
-        /* Application's initial state. */
         case STATE_CAM_WAKE:
         {
-            cam_wake(&appData.cam_data);
+            if (cam_wake(&appData.cam_data) != CAM_SUCCESS) {
+                APP_Initialize();
+                break;
+            }
+            appData.state = STATE_CAM_INIT;
             break;
         }
 
-        /* TODO: implement your application state machine.*/
+        case STATE_CAM_INIT:
+        {
+            if (cam_send_initial(&appData.cam_data) != CAM_SUCCESS) {
+                APP_Initialize();
+                break;
+            }
+            if (cam_send_package_size(&appData.cam_data) != CAM_SUCCESS) {
+                APP_Initialize();
+                break;
+            }
+            appData.state = STATE_CAM_RECEIVE;
+            break;
+        }
 
-        /* The default state should never be executed. */
+        case STATE_CAM_RECEIVE:
+        {
+            if (cam_send_get_picture(&appData.cam_data) != CAM_SUCCESS) {
+                APP_Initialize();
+                break;
+            }
+        }
+
         default:
         {
-            /* TODO: Handle error in application's state machine. */
+            APP_Initialize();
             break;
         }
     }
