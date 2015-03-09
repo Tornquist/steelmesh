@@ -1,12 +1,12 @@
 /* 
- * File:   camera.h
- * Author: TJ
+ * File:   wifi.h
+ * Author: Josh Hannan
  *
- * Created on February 26, 2015, 4:32 PM
+ * Created on February 28, 2015.
  */
 
-#ifndef CAMERA_H
-#define	CAMERA_H
+//#ifndef WIFI_H
+//#define	WIFI_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -14,12 +14,12 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include "system_config.h"
-#include "system_definitions.h"
+//#include <stdint.h>
+//#include <stdbool.h>
+//#include <stddef.h>
+//#include <stdlib.h>
+//#include "system_config.h"
+//#include "system_definitions.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -27,14 +27,11 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#define CAM_COMMAND_LENGTH 6
-#define CAM_DATA_ARRAY_SIZE 512
-#define CAM_USART_ID USART_ID_2
-#define CAM_SUCCESS true
-#define CAM_FAIL false
-#define CAM_MAX_SYNC_ATTEMPTS 50
+//#define WIFI_COMMAND_LENGTH 30
+//#define WIFI_USART_ID USART_ID_2
+//#define WIFI_SUCCESS true
+//#define WIFI_FAIL false
 
-#define CAM_CMD_ID_SYNC 0x0D
 
 // *****************************************************************************
 // *****************************************************************************
@@ -42,29 +39,29 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef struct {
-    /* USART handle for camera module */
-    DRV_HANDLE cam_handle;
+//typedef struct {
+    /* USART handle for wifi module */
+  //  DRV_HANDLE wifi_handle;
     
-    /* Image data store from camera */
-    uint8_t cam_data_array[CAM_DATA_ARRAY_SIZE];
+    /* command store from wifi module */
+    //uint8_t cam_data_array[CAM_DATA_ARRAY_SIZE];
 
     /* Number of packages required to send complete image */
-    int cam_data_package_number;
+    //int cam_data_package_number;
     
     /* Current position in image array when sending */
-    int cam_data_send_index;
+    //int cam_data_send_index;
 
     /* Current position in image array when receiving */
-    int cam_data_receive_index;
+    //int cam_data_receive_index;
 
     /* Tracks image package id to use in ACK response */
-    int cam_data_package_counter;
+    //int cam_data_package_counter;
 
-    /* Command response received from the camera */
-    uint8_t cam_received_command [CAM_COMMAND_LENGTH];
+    /* Command response received from the wifi module */
+ //   uint8_t wifi_received_command [WIFI_COMMAND_LENGTH];
     
-} CAM_DATA;
+//} WIFI_DATA;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -72,26 +69,12 @@ typedef struct {
 // *****************************************************************************
 // *****************************************************************************
 
-/* Initialize fields of CAM_DATA structure */
-bool cam_data_initialize(CAM_DATA* cam_data);
+/* Initialize fields of WIFI_DATA structure */
+//bool wifi_data_initialize(WIFI_DATA* wifi_data);
 
-/* Wake up the camera by sending SYNC commands to it until an ACK is received */
-bool cam_wake(CAM_DATA* cam_data);
+/* Send $$$ to wifi module to enter command mode */
+//bool wifi_enter_cmd_mode(WIFI_DATA* wifi_data);
 
-/* Send one SYNC command to the camera */
-bool cam_send_sync(CAM_DATA* cam_data);
 
-/* Send an ACK command to the camera with irrelevant args set to 0x00 */
-bool cam_send_ack(CAM_DATA* cam_data, uint8_t command_id, uint8_t package_id_byte_0, uint8_t package_id_byte_1);
-
-/* Send an INITIAL command to the camera to set it to JPEG and set its resolution */
-bool cam_send_initial(CAM_DATA* cam_data);
-
-/* Send a SET PACKAGE SIZE command to the camera */
-bool cam_send_package_size(CAM_DATA* cam_data);
-
-/* Send a GET PICTURE command to receive a DATA packet and multiple image data packages */
-bool cam_send_get_picture(CAM_DATA* cam_data);
-
-#endif	/* CAMERA_H */
+//#endif	/* WIFI_H */
 

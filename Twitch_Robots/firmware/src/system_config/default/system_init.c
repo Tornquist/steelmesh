@@ -60,7 +60,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /*** DEVCFG0 ***/
 
-#pragma config DEBUG =      OFF
+#pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
 #pragma config ICESEL =     ICS_PGx2
 #pragma config TRCEN =      ON
@@ -219,8 +219,11 @@ const SYS_DEVCON_INIT sysDevconInit =
 
 void SYS_Initialize ( void* data )
 {
+    int i;
     /* Core Processor Initialization */
     SYS_CLK_Initialize( NULL );
+
+    //for(i = 0; i<2000; i++) {}
     sysObj.sysDevcon = SYS_DEVCON_Initialize(SYS_DEVCON_INDEX_0, (SYS_MODULE_INIT*)&sysDevconInit);
     SYS_DEVCON_PerformanceConfig(SYS_CLK_SystemFrequencyGet());
     SYS_PORTS_Initialize();

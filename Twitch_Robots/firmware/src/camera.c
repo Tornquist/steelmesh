@@ -1,6 +1,7 @@
-#include "app.h"
+/*#include "app.h"*/
 
 /* Initialize fields of CAM_DATA structure */
+/*
 bool cam_data_initialize(CAM_DATA* cam_data) {
     int i;
 
@@ -20,7 +21,7 @@ bool cam_data_initialize(CAM_DATA* cam_data) {
     return CAM_SUCCESS;
 }
 
-/* Wake up the camera by sending SYNC commands to it until an ACK is received */
+// Wake up the camera by sending SYNC commands to it until an ACK is received
 bool cam_wake(CAM_DATA* cam_data) {
     int i;
     int bytesProcessed;
@@ -76,4 +77,4 @@ bool cam_send_ack(CAM_DATA* cam_data, uint8_t command_id, uint8_t package_id_byt
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     return CAM_SUCCESS;
-}
+}*/

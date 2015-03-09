@@ -55,6 +55,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "app.h"
 
+bool sync_command_signal;
+
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -114,10 +117,12 @@ APP_DATA appData;
 void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
-    appData.state = STATE_CAM_WAKE;
+    appData.state = STATE_WIFI_CMD;
+
+    sync_command_signal = false;
     
-    /* Initialize camera structure */
-    cam_data_initialize(&appData.cam_data);
+    /* Initialize wifi structure */
+    wifi_data_initialize(&appData.wifi_data);
 
     /* TODO: Initialize your application's state machine and other
      * parameters.
@@ -135,13 +140,39 @@ void APP_Initialize ( void )
 
 void APP_Tasks ( void )
 {
+    //uint8_t ENTER_CMD_MODE [3] = {0x24, 0x24, 0x24};
+    //uint8_t SET_UART_BAUD [19] = {0x73, 0x65, 0x74, 0x20, 0x75, 0x61, 0x72, 0x74, 0x20, 0x62, 0x61, 0x75, 0x64, 0x20, 0x39, 0x36, 0x30, 0x30, 0x0D};
     /* Check the application's current state. */
+    //sync_command_signal = false;
     switch ( appData.state )
     {
         /* Application's initial state. */
-        case STATE_CAM_WAKE:
+        case STATE_WIFI_CMD:
         {
-            cam_wake(&appData.cam_data);
+            //if (sync_command_signal == false) {
+            //    sync_command_signal == true;
+            wifi_enter_cmd_mode(&appData.wifi_data);
+            //}
+            wifi_receive_response(&appData.wifi_data);
+            
+            //if(wifi_receive_response(&appData.wifi_data) == WIFI_SUCCESS) {
+            //    appData.state = STATE_WIFI_INIT;
+            //} else {
+            //    appData.state = STATE_WIFI_CMD;
+            //}
+            break;
+        }
+
+        case STATE_WIFI_INIT:
+        {
+
+            if (sync_command_signal == false) {
+                sync_command_signal == true;
+                //wifi_send_cmd(&appData.wifi_data);
+            }
+
+            wifi_receive_response(&appData.wifi_data);
+
             break;
         }
 

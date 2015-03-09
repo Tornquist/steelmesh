@@ -58,7 +58,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
-#include "camera.h"
 #include "command.h"
 #include "wifi.h"
 
@@ -67,15 +66,19 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
+bool sync_command_signal;
+
 
 typedef enum
 {
-	/* Wake up the camera */
-	STATE_CAM_WAKE,
-        /* Send initialization commands to camera */
-        STATE_CAM_INIT,
-        /* Receive an image from the camera */
-        STATE_CAM_RECEIVE
+	/* Put the wifi module in command mode */
+	STATE_WIFI_CMD,
+        /* Send initialization commands to the wifi module */
+        STATE_WIFI_INIT,
+        /* Receive a command from the wifi module */
+        STATE_WIFI_RECEIVE,
+        /* Send an image to the wifi module */
+        STATE_WIFI_SEND_IMG
 
 } APP_STATES;
 
@@ -85,7 +88,7 @@ typedef struct
     APP_STATES state;
 
     /* Camera data */
-    CAM_DATA cam_data;
+    WIFI_DATA wifi_data;
     
     /* Flag set when a command has completed */
     bool cmd_complete;
