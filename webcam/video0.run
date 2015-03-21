@@ -1,1 +1,1 @@
-./mjpg_streamer -i "./input_uvc.so -d /dev/video0 -y -f 20 -r 640x480" -o "./output_http.so -w ./www"
+/home/pi/mjpg-streamer/mjpg_streamer -i "/home/pi/mjpg-streamer/input_uvc.so -d /dev/video0 -y -f 15 -r 640x480" -o "/home/pi/mjpg-streamer/output_http.so -w ./www"
