@@ -24,5 +24,8 @@ class StreamsController < ApplicationController
   ensure
     response.stream.close
   end
+
+  def field
+  end
 end
 
