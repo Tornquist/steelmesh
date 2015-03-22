@@ -1,6 +1,16 @@
 /* 
  * File:   newmain.c
- * Author: EE63PC1-user
+ * Author: Josh Hannan
+ *
+ * When the WiFi module gets a command, it sends a carriage return, newline,
+ * the command that was sent, another carriage return, newline, AOK, then
+ * another carriage return and newline, then "<2.45> " which is the firmware
+ * version number plus a space.
+ * 15 or 16 more characters than the original command.
+ *
+ * In configuration commands, spaces in the command are still spaces, but spaces
+ * in the parameters of the commands need to be $.
+ * 
  *
  * Created on March 11, 2015, 1:51 PM
  */
@@ -11,9 +21,8 @@
 #include <stdlib.h>
 #include "proc/p32mz2048ech100.h"
 #include "p32xxxx.h"
-//#include <peripheral/uart.h>
 
-#define FPB 99000000L // Frequency Peripheral Bus = 40MHz
+#define FPB 99000000L // Frequency Peripheral Bus = 99MHz
 #define BAUDRATE 9600
 
 #pragma config DEBUG =      ON
@@ -70,6 +79,30 @@
 #pragma config CSEQ =       0xffff
 
 //-------------------------------------------------
+//  setup_config
+//  sets ports as digital outputs and disables timers
+//-------------------------------------------------
+void setup_config(void)
+{
+    // disable watchdog and deadman timers
+    WDTCONbits.ON = 0;
+    DMTCONbits.ON = 0;
+
+    // disable jtag
+    CFGCONbits.JTAGEN = 0;
+    
+    // set all ports as outputs
+    TRISACLR = 0xFFFF;
+    TRISBCLR = 0xFFFF;
+    TRISGCLR = 0xFFFF;
+
+    // set all ports as digital
+    ANSELACLR = 0xFFFF;
+    ANSELBCLR = 0xFFFF;
+    ANSELGCLR = 0xFFFF;
+}
+
+//-------------------------------------------------
 //  setup_pps
 //  sets configuration registers for peripheral pin
 //  select
@@ -96,6 +129,10 @@ void setup_pps(void)
 //-------------------------------------------------
 void setup_uart(void)
 {
+    // set UART ports as inputs and outputs
+    TRISGbits.TRISG8 = 1;  // RX
+    TRISGbits.TRISG7 = 0;  // TX
+
     // how to set the baud rate of the uart? BRG = 25 for 4MHz peripheral bus clock
     U1BRG = FPB/(4.0*BAUDRATE)-1;  // maybe
     U1MODEbits.ON = 1;             // enables uart module
@@ -138,10 +175,15 @@ void tx_char(unsigned char c)
     U1TXREG = c;              
 }
 
-/*void rx_string(char *RESPONSE)
+//-------------------------------------------------
+//  rx_string
+//  receives a string of length ascii characters
+//  over UART
+//-------------------------------------------------
+/*void rx_string(char *RESPONSE, int length)
 {
     int i;
-    for(i = 0; i < 20; i++) {
+    for(i = 0; i < length; i++) {
         RESPONSE[i] = rx_char();
     }
 }*/
@@ -166,38 +208,24 @@ char rx_char()
  */
 int main(int argc, char** argv) {
     int i = 0;
-    //char RESPONSE [6] = {0x00,0x00,0x00,0x00,0x00,0x00};
     char RESPONSE [50] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    // commands to enter and exit command mode
     char ENTER_CMD [3] = {'$', '$', '$'};
     char EXIT_CMD [5] = {'e','x','i','t',0x0d};
-    char SET_IP_PROTO [16] = {'s','e','t','$','i','p','$','p','r','o','t','o','$','1','8',0x0D};
-    char SET_COMM [14] = {'s','e','t','$','c','o','m','m','$','$','$','m',0x0D};
+    // used for testing, might need later
+    char SET_COMM [14] = {'s','e','t',' ','c','o','m','m',' ','$',' ','m',0x0d};
     char SET_COMM_OPEN [19] = {'s','e','t',' ','c','o','m','m',' ','o','p','e','n',' ','p','o','o','p',0x0d};
     char GET_APMODE [12] = {'g','e','t',' ','a','p','m','o','d','e',0x0d};
-
-    // disable watchdog and deadman timers
-    WDTCONbits.ON = 0;
-    DMTCONbits.ON = 0;
-
-    // set all ports as outputs
-    TRISACLR = 0xFFFF;
-    TRISBCLR = 0xFFFF;
-    TRISGCLR = 0xFFFF;
-
-    // set all ports as digital
-    ANSELACLR = 0xFFFF;
-    ANSELBCLR = 0xFFFF;
-    ANSELGCLR = 0xFFFF;
-
-    // disable jtag
-    CFGCONbits.JTAGEN = 0;
-
-    // set UART ports as inputs and outputs
-    TRISGbits.TRISG8 = 1;  // RX
-    TRISGbits.TRISG7 = 0;  // TX
+    // commands we will need for the design
+    char SET_IP_PROTO [16] = {'s','e','t',' ','i','p',' ','p','r','o','t','o',' ','1','8',0x0d};
+    char SET_DNS_NAME [] = {'s','e','t',' ','d','n','s',' ','n','a','m','e',' ',' '};  //ADD WEBSITE NAME
+    char SET_IP_ADDRESS [] = {'s','e','t',' ','i','p',' ','a','d','d','r','e','s','s',' '}; //ADD IP ADDRESS
+    char SET_IP_REMOTE [] = {'s','e','t',' ','i','p',' ','r','e','m','o','t','e',' '}; //ADD PORT NUMBER. 80 is standard
+    char SET_COM_REMOTE [] = {'s','e','t',' ','c','o','m',' ','r','e','m','o','t','e',' ','0'}; //// Turn off the REMOTE string so that it doesn't interfere with this post
 
     // call configuration settings for uart and pps
-    setup_uart();    
+    setup_config();
+    setup_uart();
     setup_pps();
 
     // wait for settings to take effect
@@ -214,18 +242,13 @@ int main(int argc, char** argv) {
         RESPONSE[2] = rx_char();
 
         // send a config command to WiFi module
-        tx_string(SET_COMM_OPEN, 19);
+        tx_string(SET_IP_PROTO, 16);
+        
         // receive AOK response
         //rx_string(RESPONSE);
-        for(i = 0; i < 16; i++) {
+        for(i = 0; i < 32; i++) {
             RESPONSE[i] = rx_char();
         }
-        /*RESPONSE[0] = rx_char();
-        RESPONSE[1] = rx_char();
-        RESPONSE[2] = rx_char();
-        RESPONSE[3] = rx_char();
-        RESPONSE[4] = rx_char();
-        RESPONSE[5] = rx_char();*/
 
         tx_string(SET_IP_PROTO, 16);
       
