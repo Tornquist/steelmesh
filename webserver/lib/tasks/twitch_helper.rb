@@ -1,17 +1,18 @@
 class TwitchHelper
   require 'redis'
-  def self.parseReceived(queue, m)
+  require 'redis-queue'
+  def self.parseReceived(redis, m)
     case m.message
     when /^!left$/
-      self.send(queue, m, :left)
+      self.send(redis, m, :left)
     when /^!right$/
-      self.send(queue, m, :right)
+      self.send(redis, m, :right)
     when /^!forward$/
-      self.send(queue, m, :forward)
+      self.send(redis, m, :forward)
     when /^!reverse$/
-      self.send(queue, m, :reverse)
+      self.send(redis, m, :reverse)
     when /^!kick$/
-      self.send(queue, m, :kick)
+      self.send(redis, m, :kick)
     else
       5.times { puts }
       puts "#{m.channel} ECE477: Invalid Command"
@@ -19,14 +20,11 @@ class TwitchHelper
     end
   end
 
-  def self.send(queue, m, command)
+  def self.send(redis, m, command)
     bot = self.bot(m.channel)
     self.print(bot.to_s + " | " + m.user.nick + ": " + command.to_s)
-    if (bot == :bot1)
-      queue.publish("steelmesh:bot1", command.to_json)
-    elsif (bot == :bot2)
-      queue.publish("steelmesh:bot2", command.to_json)
-    end
+    queue = Redis::Queue.new(bot.to_s, 'steelmesh', :redis => redis)
+    queue << command.to_json
   end
 
   def self.bot(channel)

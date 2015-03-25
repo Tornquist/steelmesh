@@ -9,4 +9,6 @@ Rails.application.routes.draw do
   get '/feeds/:id/start', to: 'feeds#start'
   get '/feeds/:id/image', to: 'feeds#image'
   get '/feeds/:id/end', to: 'feeds#end'
+
+  get '/command/:id', to: 'commands#get'
 end
