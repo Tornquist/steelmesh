@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/attribs.h>
 #include "proc/p32mz2048ech100.h"
 #include "p32xxxx.h"
 #include "wifi.h"
@@ -82,6 +83,10 @@
 int main(int argc, char** argv) {
     int i = 0;
     char *HELLO_WORLD = "Hello World";
+    char *START = "GET /feeds/1/start \n\n";
+    char *DATA_HEADER = "GET /feeds/1/image?data=";
+    char *DATA_FOOTER = " \n\n";
+    char *END = "GET /feeds/1/end \n\n";
 
     // call configuration settings for uart and pps
     setup_config();
@@ -93,15 +98,37 @@ int main(int argc, char** argv) {
         i++;
     }
 
-    wifi_config();
+    //join steelmesh network
+    //join_steelmesh();
+
+    // set configuration for wifi: not needed anymore
+    //wifi_set_config();
+    
+    //wifi_open_config();
+
+    //wifi_open_connection();
 
     while(1) {
         
         // this data should be sent over wifi to the webserver
-        tx_string(HELLO_WORLD);       
+        /*tx_string(START);
+        tx_string(DATA_HEADER);
+        tx_string(HELLO_WORLD);
+        tx_string(DATA_FOOTER);
+        tx_string(END);
+        */
+        i=0;
+        while(i<2500000) {
+            i++;
+        }
+        PR2 = 0x00C7;     // sets period of PWM
+        i=0;
+        while(i<2500000) {
+            i++;
+        }
+        PR2 = 0x0097;     // sets period of PWM
       
     }
 
     return (EXIT_SUCCESS);
 }
-

@@ -20,23 +20,15 @@
 #define WIFI_SUCCESS 1
 #define WIFI_FAIL 0
 
-void setup_config(void);
-
-void setup_pps(void);
-
-void setup_uart(void);
-
-void tx_string(char *string);
-
-void tx_char(unsigned char c);
-
-int rx_string(int length);
-
-char rx_char();
-
 void fail_wait(void);
 
-void wifi_config(void);
+void join_steelmesh(void);
+
+void wifi_set_config(void);
+
+void wifi_open_connection(void);
+
+void wifi_open_config(void);
 
 
 
