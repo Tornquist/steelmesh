@@ -99,34 +99,37 @@ int main(int argc, char** argv) {
     }
 
     //join steelmesh network
-    //join_steelmesh();
+    //wifi_join_steelmesh();
 
     // set configuration for wifi: not needed anymore
-    //wifi_set_config();
-    
-    //wifi_open_config();
+    wifi_reboot();
+    wifi_set_config();
+    wifi_open_config();
+    wifi_join_steelmesh();
+    //wifi_update_device();
 
     //wifi_open_connection();
+    tx_string("$$$");
+    rx_string(3);
+    tx_string("get everything\r");
 
+    
     while(1) {
         
         // this data should be sent over wifi to the webserver
-        /*tx_string(START);
-        tx_string(DATA_HEADER);
-        tx_string(HELLO_WORLD);
-        tx_string(DATA_FOOTER);
-        tx_string(END);
-        */
-        i=0;
-        while(i<2500000) {
-            i++;
-        }
-        PR2 = 0x00C7;     // sets period of PWM
-        i=0;
-        while(i<2500000) {
-            i++;
-        }
-        PR2 = 0x0097;     // sets period of PWM
+        
+        tx_string("1234");
+        
+//        i=0;
+//        while(i<20000000) {
+//            i++;
+//        }
+//        PR2 = 0x00C7;     // sets period of PWM
+//        i=0;
+//        while(i<20000000) {
+//            i++;
+//        }
+//        PR2 = 0x0097;     // sets period of PWM
       
     }
 

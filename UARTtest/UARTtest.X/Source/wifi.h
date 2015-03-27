@@ -22,7 +22,7 @@
 
 void fail_wait(void);
 
-void join_steelmesh(void);
+void wifi_join_steelmesh(void);
 
 void wifi_set_config(void);
 
@@ -30,7 +30,9 @@ void wifi_open_connection(void);
 
 void wifi_open_config(void);
 
+void wifi_update_device(void);
 
+void wifi_reboot(void);
 
 #endif	/* WIFI_H */
 

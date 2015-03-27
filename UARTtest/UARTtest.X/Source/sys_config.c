@@ -8,10 +8,11 @@
 #include "wifi.h"
 #include "sys_config.h"
 
-//-------------------------------------------------
+//------------------------------------------------------------------------------
 //  setup_config
-//  sets ports as digital outputs and disables timers
-//-------------------------------------------------
+//  sets ports as digital outputs, disables timers, configures output compare,
+//  and enables timers
+//------------------------------------------------------------------------------
 void setup_config(void)
 {
     __builtin_disable_interrupts();
@@ -47,11 +48,11 @@ void setup_config(void)
     __builtin_enable_interrupts();
 }
 
-//-------------------------------------------------
+//------------------------------------------------------------------------------
 //  setup_pps
 //  sets configuration registers for peripheral pin
 //  select
-//-------------------------------------------------
+//------------------------------------------------------------------------------
 void setup_pps(void)
 {
     SYSKEY = 0x0;         //i dont know what these do
@@ -71,10 +72,10 @@ void setup_pps(void)
     SYSKEY = 0x0;
 }
 
-//-------------------------------------------------
+//------------------------------------------------------------------------------
 //  setup_uart
 //  sets configuration registers for UART
-//-------------------------------------------------
+//------------------------------------------------------------------------------
 void setup_uart(void)
 {
     // set UART ports as inputs and outputs

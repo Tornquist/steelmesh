@@ -34,12 +34,12 @@ void turn_left(void)
 void forward(void)
 {
     int i;
-    // set pwm for left motor to go forward
-    // set pwm for right motor to go forward
+    // decrease period of pwm and set GPIO pin for left motor to go forward
+    // decrease period of pwm and set GPIO pin for right motor to go forward
 
     // wait for a short amount of time
 
-    // set them back to zero
+    // set them back to idle
 
 }
 

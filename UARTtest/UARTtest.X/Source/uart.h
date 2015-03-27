@@ -8,6 +8,9 @@
 #ifndef UART_H
 #define	UART_H
 
+#define UART_FAIL 0
+#define UART_SUCCESS 1
+
 void tx_string(char *string);
 
 void tx_char(unsigned char c);
