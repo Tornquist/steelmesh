@@ -60,6 +60,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>                     // Defines EXIT_FAILURE
 #include "system/common/sys_module.h"   // SYS function prototypes
 
+#include "app.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -69,6 +70,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 int main ( void )
 {
+    U1MODE = 5;
+    int bytesProcessed;
+    int count;
+    uint8_t cam_cmd_sync [CAM_COMMAND_LENGTH] = {0x00, 0x00, 0x00, 0x00, 0x0D, 0xAA};
+    uint8_t cam_rcv [CAM_COMMAND_LENGTH] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    DRV_HANDLE cam_handle;
+    
     /* Initialize all MPLAB Harmony modules, including application(s). */
     SYS_Initialize ( NULL );
 
@@ -76,8 +84,35 @@ int main ( void )
     while ( true )
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
-        SYS_Tasks ( );
+        //SYS_Tasks ( );
 
+        cam_handle = DRV_USART_Open(CAM_USART_ID, DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
+
+        bytesProcessed = 0;
+        count = 0;
+        do {
+            count = DRV_USART_Write(cam_handle, cam_cmd_sync + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+            if (count == DRV_USART_WRITE_ERROR) {
+                return CAM_FAIL;
+            }
+            else {
+                bytesProcessed += count;
+            }
+        } while (bytesProcessed < CAM_COMMAND_LENGTH);
+
+        bytesProcessed = 0;
+        count = 0;
+        do {
+            count = DRV_USART_Read(cam_handle, cam_rcv + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+            if (count == DRV_USART_READ_ERROR) {
+                return CAM_FAIL;
+            }
+            else {
+                bytesProcessed += count;
+            }
+        } while (bytesProcessed < CAM_COMMAND_LENGTH);
+
+        DRV_USART_Close(cam_handle);
     }
 
     /* Execution should not come here during normal operation */

@@ -6,8 +6,11 @@ bool cam_data_initialize(CAM_DATA* cam_data) {
 
     ANSELECLR = 0xFFFF;
     ANSELGCLR = 0xFFFF;
-    TRISGbits.TRISG7 = 0;
+    /*TRISGbits.TRISG7 = 0;
+    TRISGbits.TRISG8 = 1;
     TRISEbits.TRISE8 = 0;
+    TRISEbits.TRISE9 = 1;*/
+    
     cam_data->cam_handle = DRV_USART_Open(CAM_USART_ID, DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_NONBLOCKING);
     if (cam_data->cam_handle == DRV_HANDLE_INVALID) {
         return CAM_FAIL;
@@ -28,7 +31,9 @@ bool cam_data_initialize(CAM_DATA* cam_data) {
 bool cam_wake(CAM_DATA* cam_data) {
     int i;
     int bytesProcessed;
+    int count;
     uint8_t cam_cmd_sync [CAM_COMMAND_LENGTH] = {0x00, 0x00, 0x00, 0x00, 0x0D, 0xAA};
+    uint8_t cam_rcv [CAM_COMMAND_LENGTH];
 
     // send SYNC commands until wake
     for (i = 0; i < CAM_MAX_SYNC_ATTEMPTS; i++) {
@@ -43,7 +48,13 @@ bool cam_wake(CAM_DATA* cam_data) {
     // receive SYNC packet on success
     bytesProcessed = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_rcv + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     // send ACK command to verify
@@ -55,25 +66,40 @@ bool cam_wake(CAM_DATA* cam_data) {
 // send a SYNC command to the camera
 bool cam_send_sync(CAM_DATA* cam_data) {
     int bytesProcessed;
+    int count;
     uint8_t cam_cmd_sync [CAM_COMMAND_LENGTH] = {0x00, 0x00, 0x00, 0x00, 0x0D, 0xAA};
 
-    while (true) {
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Write(cam_data->cam_handle, cam_cmd_sync + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Write(cam_data->cam_handle, cam_cmd_sync + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_WRITE_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
-    }
+
     return CAM_SUCCESS;
 }
 
 // send an ACK command to the camera
 bool cam_send_ack(CAM_DATA* cam_data, uint8_t command_id, uint8_t package_id_byte_0, uint8_t package_id_byte_1) {
     int bytesProcessed = 0;
+    int count = 0;
     uint8_t cam_cmd_ack [CAM_COMMAND_LENGTH] = {package_id_byte_1, package_id_byte_0, 0x00, command_id, CAM_CMD_ID_ACK, 0xAA};
 
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Write(cam_data->cam_handle, cam_cmd_ack + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Write(cam_data->cam_handle, cam_cmd_ack + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_WRITE_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     return CAM_SUCCESS;
@@ -82,12 +108,20 @@ bool cam_send_ack(CAM_DATA* cam_data, uint8_t command_id, uint8_t package_id_byt
 /* Send an INITIAL command to the camera to set it to JPEG and set its resolution */
 bool cam_send_initial(CAM_DATA* cam_data) {
     int bytesProcessed = 0;
+    int count = 0;
     uint8_t cam_cmd_initial [CAM_COMMAND_LENGTH] = {CAM_RESOLUTION_160x128, 0x00, CAM_INITIAL_JPEG, 0x00, CAM_CMD_ID_INITIAL, 0xAA};
 
     // send INITIAL
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Write(cam_data->cam_handle, cam_cmd_initial + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Write(cam_data->cam_handle, cam_cmd_initial + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_WRITE_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     // check receipt by camera with ACK response
@@ -101,12 +135,20 @@ bool cam_send_initial(CAM_DATA* cam_data) {
 /* Send a SET PACKAGE SIZE command to the camera */
 bool cam_send_package_size(CAM_DATA* cam_data) {
     int bytesProcessed = 0;
+    int count = 0;
     uint8_t cam_cmd_package_size [CAM_COMMAND_LENGTH] = {0x00, CAM_SIZE_512_HIGH_BYTE, CAM_SIZE_512_LOW_BYTE, 0x08, CAM_CMD_ID_SET_PACKAGE_SIZE, 0xAA};
 
     // send command
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Write(cam_data->cam_handle, cam_cmd_package_size + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Write(cam_data->cam_handle, cam_cmd_package_size + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_WRITE_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     // check receipt by camera with ACK response
@@ -120,12 +162,20 @@ bool cam_send_package_size(CAM_DATA* cam_data) {
 /* Send a GET PICTURE command to receive a DATA packet and multiple image data packages */
 bool cam_send_get_picture(CAM_DATA* cam_data) {
     int bytesProcessed = 0;
+    int count = 0;
     uint8_t cam_cmd_get_picture [CAM_COMMAND_LENGTH] = {0x00, 0x00, 0x00, CAM_GET_PICTURE_JPEG, CAM_CMD_ID_GET_PICTURE, 0xAA};
 
     // send command
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Write(cam_data->cam_handle, cam_cmd_get_picture + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Write(cam_data->cam_handle, cam_cmd_get_picture + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_WRITE_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     // check receipt by camera with ACK response
@@ -156,19 +206,25 @@ bool cam_send_get_picture(CAM_DATA* cam_data) {
 
 /* Wait until an ACK is received or for a number of tries to allow processing time */
 uint8_t cam_receive_ack(CAM_DATA* cam_data) {
-    int bytesProcessed;
+    int count;
+    int total;
     int attempts;
 
     // check if ACK received
-    bytesProcessed = 0;
+    count = 0;
+    total = 0;
     attempts = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + total, CAM_COMMAND_LENGTH - total);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_ACK_FAILED;
+        }
+        total += count;
         attempts++;
         if (attempts > CAM_MAX_ACK_RECEIVE_ATTEMPTS) {
             return CAM_ACK_FAILED;
         }
-    } while (bytesProcessed < CAM_COMMAND_LENGTH);
+    } while (total < CAM_COMMAND_LENGTH);
 
     // return command ID
     return cam_data->cam_received_command[2];
@@ -177,11 +233,19 @@ uint8_t cam_receive_ack(CAM_DATA* cam_data) {
 /* Receive a DATA response and return the number of packages to expect */
 bool cam_receive_data_cmd(CAM_DATA* cam_data) {
     int bytesProcessed;
+    int count;
 
     // check if ACK received
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_COMMAND_LENGTH - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_COMMAND_LENGTH);
 
     if (cam_data->cam_received_command[1] != CAM_CMD_ID_DATA) {
@@ -205,6 +269,7 @@ bool cam_receive_package(CAM_DATA* cam_data) {
     // Data size: bytes 5 to (package size - 6)
     // Verify code: bytes N-1 to N
     int bytesProcessed;
+    int count;
     int package_id;
     int data_size;
     int verify_code;
@@ -212,7 +277,13 @@ bool cam_receive_package(CAM_DATA* cam_data) {
     // receive ID bytes
     bytesProcessed = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_ID_SIZE - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_ID_SIZE - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_PACKAGE_ID_SIZE);
 
     // assemble package id
@@ -226,8 +297,15 @@ bool cam_receive_package(CAM_DATA* cam_data) {
 
     // receive data size bytes
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_DATA_SIZE - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_DATA_SIZE - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_PACKAGE_DATA_SIZE);
 
     // assemble data size
@@ -237,8 +315,15 @@ bool cam_receive_package(CAM_DATA* cam_data) {
 
     // receive all image data bytes into array
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_data_array + bytesProcessed, data_size - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_data_array + bytesProcessed, data_size - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < data_size);
 
     // update received pointer
@@ -246,8 +331,15 @@ bool cam_receive_package(CAM_DATA* cam_data) {
 
     // receive verify code (add checks later)
     bytesProcessed = 0;
+    count = 0;
     do {
-        bytesProcessed += DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_VERIFY_SIZE - bytesProcessed);
+        count = DRV_USART_Read(cam_data->cam_handle, cam_data->cam_received_command + bytesProcessed, CAM_PACKAGE_VERIFY_SIZE - bytesProcessed);
+        if (count == DRV_USART_READ_ERROR) {
+            return CAM_FAIL;
+        }
+        else {
+            bytesProcessed += count;
+        }
     } while (bytesProcessed < CAM_PACKAGE_VERIFY_SIZE);
 
     // assemble verify code

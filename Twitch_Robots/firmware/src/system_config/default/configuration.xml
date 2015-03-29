@@ -36,12 +36,12 @@
       <Path>/framework/system/ports</Path>
     </File>
     <File>
-      <Name>bsp_config.h</Name>
-      <Path>/bsp/pic32mz_ec_pim+e16</Path>
-    </File>
-    <File>
       <Name>sys_devcon.c</Name>
       <Path>/framework/system/devcon/src</Path>
+    </File>
+    <File>
+      <Name>bsp_config.h</Name>
+      <Path>/bsp/pic32mz_ec_pim+e16</Path>
     </File>
     <File>
       <Name>sys_devcon_cache.h</Name>
@@ -105,7 +105,7 @@
     <Template>
       <Name>system_config.h</Name>
       <Path>app/system_config/default</Path>
-      <Checksum>8CFA6DFFE63290444E77A4A28E37A410</Checksum>
+      <Checksum>EE217CFD44A42319CDFBCFACF5F762C2</Checksum>
     </Template>
     <Template>
       <Name>system_definitions.h</Name>
