@@ -8,6 +8,7 @@
 #include "../include/camera.h"
 #include <sys/attribs.h>
 #include <xc.h>
+#include <string.h>
 
 #pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
@@ -77,18 +78,19 @@ int main(int argc, char** argv) {
     //asm volatile("di");
     //asm volatile("ehb");
     init();
-    cam_data_initialize(&cam_data);
     asm volatile("ei");
 
     // wake up the camera, set its mode, and set its package size
-    while (cam_wake(&cam_data) != CAM_SUCCESS);
-    cam_send_initial(&cam_data);
-    cam_send_package_size(&cam_data);
+    //while (cam_wake(&cam_data) != CAM_SUCCESS);
+    //cam_send_initial(&cam_data);
+    //cam_send_package_size(&cam_data);
 
     // receive a picture from the camera
-    cam_send_get_picture(&cam_data);
-     
+    //cam_send_get_picture(&cam_data);
+    
+    uart2_tx_string("TEST\n");
 
+    i = i + 1;
     return (EXIT_SUCCESS);
 }
 
