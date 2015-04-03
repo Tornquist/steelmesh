@@ -36,15 +36,9 @@ void wifi_join_steelmesh()
         fail_wait();
     }
 
-    // set the password for the network
-    tx_string(SET_WLAN_PHRASE);
-    if(rx_string(strlen(SET_WLAN_PHRASE)+5) == WIFI_FAIL) {
-        fail_wait();
-    }
-
     // join the network
     tx_string(JOIN_STEELMESH);
-    if(rx_string(strlen(JOIN_STEELMESH)+95) == WIFI_FAIL) {
+    if(rx_string(strlen(JOIN_STEELMESH)+127) == WIFI_FAIL) {
         fail_wait();
     }
 
@@ -83,12 +77,18 @@ void wifi_open_config(void)
 
     // load "twitch" config file
     tx_string(LOAD);
-    if(rx_string(strlen(LOAD)+4) == WIFI_FAIL) {
+    if(rx_string(strlen(LOAD)+16) == WIFI_FAIL) {
         fail_wait();
     }
 
-    tx_string(REBOOT);   //reboot the module for the settings to take effect
-    if(rx_string(strlen(REBOOT)+10) == WIFI_FAIL) {
+//    tx_string(REBOOT);   //reboot the module for the settings to take effect
+//    if(rx_string(strlen(REBOOT)+10) == WIFI_FAIL) {
+//        fail_wait();
+//    }
+
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
         fail_wait();
     }
 
@@ -184,18 +184,23 @@ void wifi_set_config()
     // commands to enter and exit command mode
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
-    char *SET_IP_PROTO = "set ip proto 18\r";
-    char *SET_DNS_NAME = "set dns name 192.168.1.7\r";
-    char *SET_IP_ADDRESS = "set ip address 192.168.1.3\r"; //ADD IP ADDRESS (WiFly IP)
-    char *SET_IP_REMOTE = "set ip remote 3000\r"; // PORT NUMBER
-    char *SET_DHCP_MODE = "set ip dhcp 0\r"; //Disable DHCP
-    char *SET_COM_REMOTE = "set com remote GET$/feeds/1/start?data=\r"; // string that begins every data transmission
-    char *SET_IP_HOST = "set ip host 192.168.1.7\r";  // turns on DNS
-    char *SET_IP_GATEWAY = "set ip gateway 192.168.1.1\r"; //Self explanatory
-    char *SET_IP_NETMASK = "set ip gateway 255.255.255.0\r"; //Self explanatory
-    char *SET_UART_MODE = "set uart mode 2\r"; // UART data trigger mode
-    char *SET_OPTION_FORMAT = "set option format 1\r"; //send html header
-    char *SET_SYS_AUTO = "set sys auto 10\r"; //automatically connect every 10 seconds
+    char *SET_IP_PROTO = "set i p 18\r";
+    char *SET_DNS_NAME = "set d n 192.168.1.2\r";
+    char *SET_IP_ADDRESS = "set i a 192.168.1.3\r"; //ADD IP ADDRESS (WiFly IP)
+    char *SET_IP_REMOTE = "set i r 3000\r"; // PORT NUMBER
+    char *SET_DHCP_MODE = "set i d 0\r"; //Disable DHCP
+    char *SET_COM_REMOTE = "set c r GET$/feeds/1/start?data=\r"; // string that begins every data transmission
+    char *SET_IP_HOST = "set i h 192.168.1.2\r";  // turns on DNS
+    char *SET_IP_GATEWAY = "set i g 192.168.1.1\r"; //Self explanatory
+    char *SET_IP_NETMASK = "set i n 255.255.255.0\r"; //Self explanatory
+    char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
+    char *SET_OPTION_FORMAT = "set o f 1\r"; //send html header
+    char *SET_WLAN_CHANNEL = "set w c 1\r";
+    char *SET_WLAN_SSID = "set w s steelmesh\r";
+    char *SET_WLAN_PHRASE = "set w p wittytrain\r";
+    char *SET_WLAN_JOIN = "set w j 1\r";
+    char *JOIN_STEELMESH = "join steelmesh\r";
+    char *SET_SYS_AUTO = "set s a 5\r"; //automatically connect every 10 seconds
     char *REBOOT = "reboot\r";  // reboots the module
     char *SAVE = "save twitch\r";  // saves settings to a file
     int i = 0;
@@ -204,41 +209,59 @@ void wifi_set_config()
     tx_string(ENTER_CMD);
     if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
 
-    // Turn on HTTP mode and receive response
-    tx_string(SET_IP_PROTO);
-    if(rx_string(strlen(SET_IP_PROTO)+13) == WIFI_FAIL) { fail_wait(); }
+    tx_string(SET_WLAN_CHANNEL);
+    if(rx_string(strlen(SET_WLAN_CHANNEL) + 16) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_WLAN_JOIN);
+    if(rx_string(strlen(SET_WLAN_JOIN)+14) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_WLAN_SSID);
+    if(rx_string(strlen(SET_WLAN_SSID) + 14) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_WLAN_PHRASE);
+    if(rx_string(strlen(SET_WLAN_PHRASE) + 14) == WIFI_FAIL) { fail_wait(); }
 
     // Sets the name of the webserver
-    //tx_string(SET_DNS_NAME);
-    //if(rx_string(strlen(SET_DNS_NAME)) == WIFI_FAIL) { fail_wait(); }
+    tx_string(SET_DNS_NAME);
+    if(rx_string(strlen(SET_DNS_NAME)+12) == WIFI_FAIL) { fail_wait(); }
 
     // turn on DNS, or maybe set webserver IP address. I dont know
     tx_string(SET_IP_HOST);
-    if(rx_string(strlen(SET_IP_HOST)+8) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_IP_HOST)+12) == WIFI_FAIL) { fail_wait(); }
 
     // set webserver port to 3000
     tx_string(SET_IP_REMOTE);
-    if(rx_string(strlen(SET_IP_REMOTE)+10) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_IP_REMOTE)+14) == WIFI_FAIL) { fail_wait(); }
 
-    tx_string(SET_IP_GATEWAY);
-    if(rx_string(strlen(SET_IP_GATEWAY)+3) == WIFI_FAIL) { fail_wait(); }
-
-    tx_string(SET_IP_NETMASK);
-    if(rx_string(strlen(SET_IP_NETMASK)+3) == WIFI_FAIL) { fail_wait(); }
-
-    tx_string(SET_DHCP_MODE);
-    if(rx_string(strlen(SET_DHCP_MODE)+3) == WIFI_FAIL) { fail_wait(); }
     // set the string that begins every data transmission
     tx_string(SET_COM_REMOTE);
-    //if(rx_string(strlen(SET_COM_REMOTE)+3) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_COM_REMOTE)-1) == WIFI_FAIL) { fail_wait(); }
 
     // Configures to autoconnect every 10 seconds
     tx_string(SET_SYS_AUTO);
-    if(rx_string(strlen(SET_SYS_AUTO)+8) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_SYS_AUTO)+14) == WIFI_FAIL) { fail_wait(); }
 
     // send an HTML header?? -- Correct. This is right Josh.
     tx_string(SET_OPTION_FORMAT);
-    if(rx_string(strlen(SET_OPTION_FORMAT)+12) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_OPTION_FORMAT)+14) == WIFI_FAIL) { fail_wait(); }
+
+    // Turn on HTTP mode and receive response
+    tx_string(SET_IP_PROTO);
+    if(rx_string(strlen(SET_IP_PROTO)+14) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_IP_ADDRESS);
+    if(rx_string(strlen(SET_IP_ADDRESS)+10) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_DHCP_MODE);
+    if(rx_string(strlen(SET_DHCP_MODE)+16) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_IP_GATEWAY);
+    if(rx_string(strlen(SET_IP_GATEWAY)+12) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_IP_NETMASK);
+    if(rx_string(strlen(SET_IP_NETMASK)+10) == WIFI_FAIL) { fail_wait(); }
+
+
 
     // Set the WiFi module to open a connection when UART data is received
     //tx_string(SET_UART_MODE);
@@ -258,13 +281,68 @@ void wifi_set_config()
     }
 }
 
+void wifi_set_real_config()
+{
+    char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
+    char *SET_IP_PROTO = "set i p 18\r";
+    char *SET_WLAN_SSID = "set w s steelmesh\r";
+    char *SET_WLAN_PHRASE = "set w p wittytrain\r";
+    char *SET_IP_REMOTE = "set i r 3000\r"; // PORT NUMBER
+    char *SET_IP_HOST = "set i h 192.168.1.2\r";  // turns on DNS
+    char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
+    char *JOIN = "join\r";
+
+    // enter command mode
+    tx_string(ENTER_CMD);
+    if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    // Turn on HTTP mode and receive response
+    tx_string(SET_IP_PROTO);
+    if(rx_string(strlen(SET_IP_PROTO)+14) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_WLAN_SSID);
+    if(rx_string(strlen(SET_WLAN_SSID) + 14) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(SET_WLAN_PHRASE);
+    if(rx_string(strlen(SET_WLAN_PHRASE) + 14) == WIFI_FAIL) { fail_wait(); }
+
+    // set webserver port to 3000
+    tx_string(SET_IP_REMOTE);
+    if(rx_string(strlen(SET_IP_REMOTE)+14) == WIFI_FAIL) { fail_wait(); }
+
+    // turn on DNS, or maybe set webserver IP address. I dont know
+    tx_string(SET_IP_HOST);
+    if(rx_string(strlen(SET_IP_HOST)+12) == WIFI_FAIL) { fail_wait(); }
+
+    // Set the WiFi module to open a connection when UART data is received
+    tx_string(SET_UART_MODE);
+    if(rx_string(strlen(SET_UART_MODE)+14) == WIFI_FAIL) { fail_wait(); }
+
+    // Set the WiFi module to open a connection when UART data is received
+    tx_string(JOIN);
+    if(rx_string(strlen(JOIN)+98) == WIFI_FAIL) { fail_wait(); }
+
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
+        fail_wait();
+    }
+
+    
+}
+
 void wifi_reboot()
 {
     char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
     char *REBOOT = "reboot\r";
     // enter command mode
     tx_string(ENTER_CMD);
     if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string("factory RESET\r");
+    if(rx_string(47) == WIFI_FAIL) { fail_wait(); }
 
     tx_string(REBOOT);
     if(rx_string(strlen(REBOOT)+10) == WIFI_FAIL) { fail_wait(); }
@@ -274,5 +352,75 @@ void wifi_reboot()
     while(i<10000) {
         i++;
     }
+}
+
+void wifi_data_start(void) {
+    char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
+    char *SET_COM_REMOTE_START = "set c r GET$/feeds/1/start?data=\r"; // string that begins every data transmission
+    
+    // enter command mode
+    tx_string(ENTER_CMD);
+    if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    // set the string that begins every data transmission
+    tx_string(SET_COM_REMOTE_START);
+    if(rx_string(strlen(SET_COM_REMOTE_START)-1) == WIFI_FAIL) { fail_wait(); }
+
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
+        fail_wait();
+    }
+
+    tx_string("1234");
+
+}
+
+void wifi_data(void) {
+    char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
+    char *SET_COM_REMOTE = "set c r GET$/feeds/1/image?data=\r"; // string that begins every data transmission
+    
+    // enter command mode
+    tx_string(ENTER_CMD);
+    if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    // set the string that begins every data transmission
+    tx_string(SET_COM_REMOTE);
+    if(rx_string(strlen(SET_COM_REMOTE)-1) == WIFI_FAIL) { fail_wait(); }
+    
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
+        fail_wait();
+    }
+
+    tx_string("1234");
+    tx_string("1234");
+    tx_string("1234");
+}
+
+void wifi_data_end(void) {
+    char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
+    char *SET_COM_REMOTE_END = "set c r GET$/feeds/1/end?data=\r"; // string that begins every data transmission
+
+    // enter command mode
+    tx_string(ENTER_CMD);
+    if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    // set the string that begins every data transmission
+    tx_string(SET_COM_REMOTE_END);
+    if(rx_string(strlen(SET_COM_REMOTE_END)-1) == WIFI_FAIL) { fail_wait(); }
+
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
+        fail_wait();
+    }
+
+    tx_string("1234");
+
 }
 

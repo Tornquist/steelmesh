@@ -103,22 +103,38 @@ int main(int argc, char** argv) {
 
     // set configuration for wifi: not needed anymore
     wifi_reboot();
-    wifi_set_config();
-    wifi_open_config();
-    wifi_join_steelmesh();
+    wifi_set_real_config();
+    //wifi_open_config();
+    //wifi_join_steelmesh();
     //wifi_update_device();
+    wifi_data_start();
+
+    wifi_data();
+
+    wifi_data_end();
 
     //wifi_open_connection();
-    tx_string("$$$");
-    rx_string(3);
-    tx_string("get everything\r");
+//    tx_string("$$$");
+//    rx_string(3);
+//    tx_string("get everything\r");
 
     
     while(1) {
-        
-        // this data should be sent over wifi to the webserver
-        
+        wifi_data_start();
+
         tx_string("1234");
+        
+        wifi_data();
+
+        tx_string("1234");
+        tx_string("1234");
+        tx_string("1234");
+        
+        wifi_data_end();
+
+        tx_string("1234");
+
+        // this data should be sent over wifi to the webserver
         
 //        i=0;
 //        while(i<20000000) {
