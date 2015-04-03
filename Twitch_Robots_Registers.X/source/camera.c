@@ -29,6 +29,16 @@ void init_config() {
     ANSELBCLR = 0xFFFF;
     ANSELECLR = 0xFFFF;
     ANSELGCLR = 0xFFFF;
+
+    // initialize UART2 receive interrupt
+    INTCONbits.MVEC = 1; // enable multi-vectored interrupt operation
+    IEC4bits.U2RXIE = 0;     // disable interrupt
+    IPC36bits.U2RXIP = 7;   // set priority
+    IPC36bits.U2RXIS = 0;   // set subpriority
+    IFS4bits.U2RXIF = 0;    // clear interrupt flag
+    IEC4bits.U2RXIE = 1;    // enable interrupt
+    //IEC4SET = _IEC4_U2RXIE_MASK; // enable interrupt
+    
 }
 void init_pps() {
     // setup PPS
@@ -57,12 +67,14 @@ void init_uart_cam() {
     U2MODEbits.PDSEL1 = 0;
     U2MODEbits.STSEL = 0;          // 1 stop bit
 
-    U2STAbits.URXEN = 1;           // enable RX
-    U2STAbits.UTXEN = 1;           // enable TX
-
     U2MODEbits.SIDL = 0;
     U2MODEbits.IREN = 0;
     U2MODEbits.RTSMD = 1;
+
+    U2STAbits.URXISEL = 0b00; // set interrupt mode
+
+    U2STAbits.URXEN = 1;           // enable RX
+    U2STAbits.UTXEN = 1;           // enable TX
 
     U2MODEbits.ON = 1;             // enables uart module
 }
@@ -77,17 +89,21 @@ char cam_rx_char() {
     while(U2STAbits.URXDA == 0) {
         i=i+1;
         // check for receive buffer overflow
-        if(U2STAbits.OERR == 1) {
-            // clear the overflow flag and the buffer
-            U2STAbits.OERR = 0;
-        }
+        
         // if it has been waiting a really long time, exit
         if(i == 1000000) {
             return 0x00;
         }
+
+        if(U2STAbits.OERR == 1) {
+            // clear the overflow flag and the buffer
+            U2STAbits.OERR = 0;
+        }
     }
     // read the receive register
     c = U2RXREG;
+
+    
     return c;
 }
 
@@ -103,11 +119,16 @@ int cam_data_initialize(CAM_DATA* cam_data) {
     for (i = 0; i < CAM_DATA_ARRAY_SIZE; i++) {
         cam_data->cam_data_array[i] = 0;
     }
+    for (i = 0; i < CAM_BUFFER_SIZE; i++) {
+        cam_data->cam_buffer[i] = 0;
+    }
+    cam_data->cam_buffer_start = 0;
+    cam_data->cam_buffer_end = 0;
+
     return CAM_SUCCESS;
 }
 
 /* Wake up the camera by sending SYNC commands to it until an ACK is received */
-// this function is verified to work correctly as of 3/29/2015 (ACK received correctly)
 int cam_wake(CAM_DATA* cam_data) {
     int i;
     int j;
@@ -130,6 +151,17 @@ int cam_wake(CAM_DATA* cam_data) {
 
     // send ACK command to verify
     cam_send_ack(cam_data, CAM_CMD_ID_SYNC, 0x00, 0x00);
+
+    return CAM_SUCCESS;
+}
+
+int cam_send_reset(CAM_DATA* cam_data) {
+    int i;
+    char cam_cmd_reset [CAM_COMMAND_LENGTH] = {0xAA, 0x08, 0x00, 0x00, 0x00, 0xFF};
+
+    for (i = 0; i < CAM_COMMAND_LENGTH; i++) {
+        cam_tx_char(cam_cmd_reset[i]);
+    }
 
     return CAM_SUCCESS;
 }
@@ -159,7 +191,6 @@ int cam_send_ack(CAM_DATA* cam_data, char command_id, char package_id_byte_0, ch
 }
 
 /* Send an INITIAL command to the camera to set it to JPEG and set its resolution */
-// function verified as of 3/29/2015 (ACK received correctly)
 int cam_send_initial(CAM_DATA* cam_data) {
     int i;
     char cam_cmd_initial [CAM_COMMAND_LENGTH] = {0xAA, CAM_CMD_ID_INITIAL, 0x00, CAM_INITIAL_JPEG, 0x00, CAM_RESOLUTION_160x128};
@@ -202,13 +233,17 @@ int cam_send_get_picture(CAM_DATA* cam_data) {
         cam_tx_char(cam_cmd_get_picture[i]);
     }
 
-    // check receipt by camera with ACK response
+    /*// check receipt by camera with ACK response
     if (cam_receive_ack(cam_data) != CAM_CMD_ID_GET_PICTURE) {
         return CAM_FAIL;
     }
 
+    for (i = 0; i < 10000000; i++) {
+        
+    }*/
+
     // receive DATA response and get number of packages into cam_data
-    if (cam_receive_data_cmd(cam_data) != CAM_CMD_ID_DATA) {
+    if (cam_receive_data_cmd(cam_data) != CAM_SUCCESS) {
         return CAM_FAIL;
     }
 
@@ -232,8 +267,13 @@ int cam_send_get_picture(CAM_DATA* cam_data) {
 char cam_receive_ack(CAM_DATA* cam_data) {
     int i;
 
+    if (!(cam_data->cam_buffer_start + 6 == cam_data->cam_buffer_end)) {
+        return 0;
+    }
+
     for (i = 0; i < CAM_COMMAND_LENGTH; i++) {
-        cam_data->cam_received_command[i] = cam_rx_char();
+        cam_data->cam_received_command[i] = cam_data->cam_buffer[cam_data->cam_buffer_start + i];
+        cam_data->cam_buffer_start = (cam_data->cam_buffer_start + 1) % CAM_BUFFER_SIZE;
     }
 
     // return command ID
@@ -248,8 +288,13 @@ int cam_receive_data_cmd(CAM_DATA* cam_data) {
     for (i = 0; i < CAM_COMMAND_LENGTH; i++) {
         cam_data->cam_received_command[i] = cam_rx_char();
     }
-    if (cam_data->cam_received_command[1] != CAM_CMD_ID_DATA) {
+    if (cam_data->cam_received_command[1] != CAM_CMD_ID_GET_PICTURE) {
         return CAM_FAIL;
+    }
+
+    // receive data package
+    for (i = 0; i < CAM_COMMAND_LENGTH; i++) {
+        cam_data->cam_received_command[i] = cam_rx_char();
     }
 
     // package size bytes into an integer
@@ -317,3 +362,4 @@ int cam_receive_package(CAM_DATA* cam_data) {
 
     return CAM_SUCCESS;
 }
+

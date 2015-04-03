@@ -21,6 +21,7 @@
 
 #define CAM_COMMAND_LENGTH 6
 #define CAM_DATA_ARRAY_SIZE 512 * 10
+#define CAM_BUFFER_SIZE 512 * 2
 #define CAM_USART_ID USART_ID_2
 #define CAM_SUCCESS 0
 #define CAM_FAIL 1
@@ -79,7 +80,12 @@ typedef struct {
     int cam_data_package_counter;
 
     /* Command response received from the camera */
-    char cam_received_command [CAM_COMMAND_LENGTH];
+    char cam_received_command [6];
+
+    /* Place for received data from camera */
+    char cam_buffer [CAM_BUFFER_SIZE];
+    int cam_buffer_start;
+    int cam_buffer_end;
 
 } CAM_DATA;
 
@@ -104,6 +110,8 @@ int cam_data_initialize(CAM_DATA* cam_data);
 
 /* Wake up the camera by sending SYNC commands to it until an ACK is received */
 int cam_wake(CAM_DATA* cam_data);
+
+int cam_send_reset(CAM_DATA* cam_data);
 
 /* Send one SYNC command to the camera */
 int cam_send_sync(CAM_DATA* cam_data);

@@ -6,6 +6,8 @@
  */
 
 #include "../include/camera.h"
+#include <sys/attribs.h>
+#include <xc.h>
 
 #pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
@@ -63,17 +65,20 @@
 /*
  *
  */
+
+int cam_data_index;
+char cam_data_buff[1024];
+
 int main(int argc, char** argv) {
+    int i;
     CAM_DATA cam_data;
 
     // initialize
+    //asm volatile("di");
+    //asm volatile("ehb");
     init();
     cam_data_initialize(&cam_data);
-
-    //while (1) {
-    //    cam_tx_char('A');
-    //}
-
+    asm volatile("ei");
 
     // wake up the camera, set its mode, and set its package size
     while (cam_wake(&cam_data) != CAM_SUCCESS);
@@ -82,6 +87,14 @@ int main(int argc, char** argv) {
 
     // receive a picture from the camera
     cam_send_get_picture(&cam_data);
+     
 
     return (EXIT_SUCCESS);
+}
+
+void __ISR (_UART2_RX_VECTOR, IPL7SRS) Uart2RXIntHandler(void) {
+    //while (U2STAbits.URXDA);
+    cam_data_buff[cam_data_index] = U2RXREG;
+    cam_data_index = cam_data_index + 1;
+    IFS4CLR = _IFS4_U2RXIF_MASK;
 }
