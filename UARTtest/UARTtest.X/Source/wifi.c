@@ -288,9 +288,9 @@ void wifi_set_real_config()
     char *SET_IP_PROTO = "set i p 18\r";
     char *SET_WLAN_SSID = "set w s steelmesh\r";
     char *SET_WLAN_PHRASE = "set w p wittytrain\r";
-    char *SET_IP_REMOTE = "set i r 3000\r"; // PORT NUMBER
-    char *SET_IP_HOST = "set i h 192.168.1.2\r";  // turns on DNS
-    char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
+    char *SET_IP_REMOTE = "set ip remote 3000\r"; // PORT NUMBER
+    char *SET_IP_HOST = "set ip host 192.168.1.7\r";  // turns on DNS
+    char *SET_UART_MODE = "set uart mode 2\r"; // UART data trigger mode
     char *JOIN = "join\r";
 
     // enter command mode
@@ -299,7 +299,7 @@ void wifi_set_real_config()
 
     // Turn on HTTP mode and receive response
     tx_string(SET_IP_PROTO);
-    if(rx_string(strlen(SET_IP_PROTO)+14) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_IP_PROTO) + 14) == WIFI_FAIL) { fail_wait(); }
 
     tx_string(SET_WLAN_SSID);
     if(rx_string(strlen(SET_WLAN_SSID) + 14) == WIFI_FAIL) { fail_wait(); }
@@ -309,20 +309,21 @@ void wifi_set_real_config()
 
     // set webserver port to 3000
     tx_string(SET_IP_REMOTE);
-    if(rx_string(strlen(SET_IP_REMOTE)+14) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_IP_REMOTE) + 14) == WIFI_FAIL) { fail_wait(); }
 
     // turn on DNS, or maybe set webserver IP address. I dont know
     tx_string(SET_IP_HOST);
-    if(rx_string(strlen(SET_IP_HOST)+12) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_IP_HOST) + 6) == WIFI_FAIL) { fail_wait(); }
 
     // Set the WiFi module to open a connection when UART data is received
     tx_string(SET_UART_MODE);
-    if(rx_string(strlen(SET_UART_MODE)+14) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_UART_MODE) + 14) == WIFI_FAIL) { fail_wait(); }
 
     // Set the WiFi module to open a connection when UART data is received
     tx_string(JOIN);
-    if(rx_string(strlen(JOIN)+98) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(JOIN) + 150) == WIFI_FAIL) { fail_wait(); }
 
+ 
     // exit command mode to go to data mode
     tx_string(EXIT_CMD);
     if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
@@ -339,6 +340,7 @@ void wifi_reboot()
     char *REBOOT = "reboot\r";
     // enter command mode
     tx_string(ENTER_CMD);
+    
     if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
 
     tx_string("factory RESET\r");
@@ -349,15 +351,16 @@ void wifi_reboot()
 
     // wait for reboot
     int i = 0;
-    while(i<10000) {
+    while(i<10000000) {
         i++;
     }
+    
 }
 
 void wifi_data_start(void) {
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
-    char *SET_COM_REMOTE_START = "set c r GET$/feeds/1/start?data=\r"; // string that begins every data transmission
+    char *SET_COM_REMOTE_START = "set comm remote GET$/feeds/1/start?data=\r"; // string that begins every data transmission
     
     // enter command mode
     tx_string(ENTER_CMD);
@@ -365,15 +368,13 @@ void wifi_data_start(void) {
 
     // set the string that begins every data transmission
     tx_string(SET_COM_REMOTE_START);
-    if(rx_string(strlen(SET_COM_REMOTE_START)-1) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_COM_REMOTE_START)-7) == WIFI_FAIL) { fail_wait(); }
 
     // exit command mode to go to data mode
     tx_string(EXIT_CMD);
     if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
         fail_wait();
     }
-
-    tx_string("1234");
 
 }
 
@@ -388,7 +389,7 @@ void wifi_data(void) {
 
     // set the string that begins every data transmission
     tx_string(SET_COM_REMOTE);
-    if(rx_string(strlen(SET_COM_REMOTE)-1) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_COM_REMOTE)+2) == WIFI_FAIL) { fail_wait(); }
     
     // exit command mode to go to data mode
     tx_string(EXIT_CMD);
@@ -396,9 +397,6 @@ void wifi_data(void) {
         fail_wait();
     }
 
-    tx_string("1234");
-    tx_string("1234");
-    tx_string("1234");
 }
 
 void wifi_data_end(void) {
@@ -412,7 +410,7 @@ void wifi_data_end(void) {
 
     // set the string that begins every data transmission
     tx_string(SET_COM_REMOTE_END);
-    if(rx_string(strlen(SET_COM_REMOTE_END)-1) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(SET_COM_REMOTE_END)+2) == WIFI_FAIL) { fail_wait(); }
 
     // exit command mode to go to data mode
     tx_string(EXIT_CMD);

@@ -97,20 +97,34 @@ int main(int argc, char** argv) {
     while(i<2000){
         i++;
     }
+    i = 0;
 
-    //join steelmesh network
-    //wifi_join_steelmesh();
 
     // set configuration for wifi: not needed anymore
     wifi_reboot();
     wifi_set_real_config();
-    //wifi_open_config();
-    //wifi_join_steelmesh();
-    //wifi_update_device();
+        
     wifi_data_start();
+    while(i<2000){
+        i++;
+    }
+    i = 0;
+    
+    tx_string("h\n\n");
+    tx_string("he");
+    tx_string("hel");
+    tx_string("hell");
+    tx_string("hello");
+    tx_string("hello\n");
+    
+    /*wifi_data();
+    while(i<2000){
+        i++;
+    }
+    i = 0;
 
-    wifi_data();
-
+    tx_string("hello!!!!!!\r\n");
+    
     wifi_data_end();
 
     //wifi_open_connection();
@@ -148,6 +162,6 @@ int main(int argc, char** argv) {
 //        PR2 = 0x0097;     // sets period of PWM
       
     }
-
+*/
     return (EXIT_SUCCESS);
 }
