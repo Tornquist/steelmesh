@@ -82,6 +82,8 @@
  */
 int main(int argc, char** argv) {
     int i = 0;
+    int j = 0;
+    int action;
     char *HELLO_WORLD = "Hello World";
     char *START = "GET /feeds/1/start \n\n";
     char *DATA_HEADER = "GET /feeds/1/image?data=";
@@ -108,66 +110,17 @@ int main(int argc, char** argv) {
     while(i<2000){
         i++;
     }
-    i = 0;
-    
-    
-    tx_string("paul\r\n");
-    rx_string(15);
-    tx_string("paul\r\n");
-    rx_string(15);
-    tx_string("paul\r\n");
-    rx_string(15);
-    tx_string("paul\r\n");
-    rx_string(15);
-    tx_string("paul\r\n");
-    rx_string(15);
+    i = 0;    
 
-    
-    //wifi_data();
-    /*while(i<2000){
-        i++;
+
+    while (j < 2000) {
+        action = rx_command();
+        while(i<100000){
+            i++;
+        }
+        i = 0;
+        j = j + 1;
+        if (j > 1950) { j = 0; }
     }
-    i = 0;
-
-    tx_string("hello!!!!!!\r\n");
-    
-    wifi_data_end();
-
-    //wifi_open_connection();
-//    tx_string("$$$");
-//    rx_string(3);
-//    tx_string("get everything\r");
-
-    
-    while(1) {
-        wifi_data_start();
-
-        tx_string("1234");
-        
-        wifi_data();
-
-        tx_string("1234");
-        tx_string("1234");
-        tx_string("1234");
-        
-        wifi_data_end();
-
-        tx_string("1234");
-
-        // this data should be sent over wifi to the webserver
-        
-//        i=0;
-//        while(i<20000000) {
-//            i++;
-//        }
-//        PR2 = 0x00C7;     // sets period of PWM
-//        i=0;
-//        while(i<20000000) {
-//            i++;
-//        }
-//        PR2 = 0x0097;     // sets period of PWM
-      
-    }
-*/
     return (EXIT_SUCCESS);
 }

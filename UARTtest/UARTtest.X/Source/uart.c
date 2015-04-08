@@ -42,6 +42,45 @@ void tx_char(unsigned char c)
 }
 
 //------------------------------------------------------------------------------
+//  rx_command
+//  receives a string of length ascii characters
+//  over UART
+//------------------------------------------------------------------------------
+int rx_command()
+{
+    int i;
+    char RESPONSE [15] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+
+    tx_string("paul\r\n");
+
+    for(i = 0; i < 15; i++) {
+        RESPONSE[i] = rx_char();
+        if (RESPONSE[i] == 0x00) {
+            return UART_FAIL;
+        }
+    }
+
+    switch(RESPONSE[7]) {
+        case 'n':
+            return ROBOT_NOP;
+        case 'f':
+            return ROBOT_FORWARD;
+        case 'b':
+            return ROBOT_BACK;
+        case 'l':
+            return ROBOT_LEFT;
+        case 'r':
+            return ROBOT_RIGHT;
+        case 'k':
+            return ROBOT_KICK;
+        default:
+            return ROBOT_NOP;
+    }
+    return ROBOT_NOP;
+}
+
+
+//------------------------------------------------------------------------------
 //  rx_string
 //  receives a string of length ascii characters
 //  over UART
