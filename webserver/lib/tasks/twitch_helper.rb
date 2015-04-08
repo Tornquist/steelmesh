@@ -4,15 +4,17 @@ class TwitchHelper
   def self.parseReceived(redis, m)
     case m.message
     when /^!left$/
-      self.send(redis, m, :left)
+      self.send(redis, m, :l)
     when /^!right$/
-      self.send(redis, m, :right)
+      self.send(redis, m, :r)
     when /^!forward$/
-      self.send(redis, m, :forward)
-    when /^!reverse$/
-      self.send(redis, m, :reverse)
+      self.send(redis, m, :f)
+    when /^!back$/
+      self.send(redis, m, :b)
     when /^!kick$/
-      self.send(redis, m, :kick)
+      self.send(redis, m, :k)
+    when /^!nop$/
+      self.send(redis, m, :n)
     else
       5.times { puts }
       puts "#{m.channel} ECE477: Invalid Command"
