@@ -327,7 +327,7 @@ void wifi_set_real_config()
     
     // Set the WiFi module to open a connection when UART data is received
     tx_string(JOIN);
-    if(rx_string(strlen(JOIN) + 150) == WIFI_FAIL) { fail_wait(); }
+    if(rx_string(strlen(JOIN) + 200) == WIFI_FAIL) { fail_wait(); }
 
 
  
