@@ -104,21 +104,27 @@ int main(int argc, char** argv) {
     wifi_reboot();
     wifi_set_real_config();
         
-    wifi_data_start();
+    //wifi_data_start();
     while(i<2000){
         i++;
     }
     i = 0;
     
-    tx_string("h\n\n");
-    tx_string("he");
-    tx_string("hel");
-    tx_string("hell");
-    tx_string("hello");
-    tx_string("hello\n");
     
-    /*wifi_data();
-    while(i<2000){
+    tx_string("paul\r\n");
+    rx_string(15);
+    tx_string("paul\r\n");
+    rx_string(15);
+    tx_string("paul\r\n");
+    rx_string(15);
+    tx_string("paul\r\n");
+    rx_string(15);
+    tx_string("paul\r\n");
+    rx_string(15);
+
+    
+    //wifi_data();
+    /*while(i<2000){
         i++;
     }
     i = 0;

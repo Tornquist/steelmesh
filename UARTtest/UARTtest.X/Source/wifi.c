@@ -290,8 +290,9 @@ void wifi_set_real_config()
     char *SET_WLAN_PHRASE = "set w p wittytrain\r";
     char *SET_IP_REMOTE = "set ip remote 3000\r"; // PORT NUMBER
     char *SET_IP_HOST = "set ip host 192.168.1.7\r";  // turns on DNS
-    char *SET_UART_MODE = "set uart mode 2\r"; // UART data trigger mode
+    char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
     char *JOIN = "join\r";
+    char *SET_COM_REMOTE_START = "set comm remote GET$/command/1?data=\r"; // string that begins every data transmission
 
     // enter command mode
     tx_string(ENTER_CMD);
@@ -319,9 +320,15 @@ void wifi_set_real_config()
     tx_string(SET_UART_MODE);
     if(rx_string(strlen(SET_UART_MODE) + 14) == WIFI_FAIL) { fail_wait(); }
 
+
+    // set the string that begins every data transmission
+    tx_string(SET_COM_REMOTE_START);
+    if(rx_string(strlen(SET_COM_REMOTE_START)-7) == WIFI_FAIL) { fail_wait(); }
+    
     // Set the WiFi module to open a connection when UART data is received
     tx_string(JOIN);
     if(rx_string(strlen(JOIN) + 150) == WIFI_FAIL) { fail_wait(); }
+
 
  
     // exit command mode to go to data mode
