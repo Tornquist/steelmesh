@@ -43,7 +43,29 @@ void setup_config(void)
     PR2 = 0x00C7;         // sets period of PWM
 
     T2CONSET = 0x8000;    // enable timer 2
-    OC1CONSET = 0x8000;   // enable Output Compare (PWM)
+    OC1CONSET = 0x0000;   // enable Output Compare (PWM)
+
+    // output compare 2
+    OC2CON = 0x0000;
+    OC2R = 0x0064;        // set initial duty cycle
+    OC2RS = 0x0064;       // set duty cycle
+    OC2CON = 0x0006;      // set mode to PWM
+    PR3 = 0x00C7;         // sets period of PWM
+
+    T3CONSET = 0x8000;    // enable timer 2
+    OC2CONSET = 0x0000;   // enable Output Compare (PWM)
+
+    // output compare 3
+    OC3CON = 0x0000;
+    OC3R = 0x04F;        // set initial duty cycle
+    OC3RS = 0x04F;       // set duty cycle
+    OC3CON = 0x0006;      // set mode to PWM
+    PR4 = 0x0FF;         // sets period of PWM
+
+    T4CONSET = 0x8000;    // enable timer 2
+    OC3CONSET = 0x8000;   // enable Output Compare (PWM)
+
+    
 
     __builtin_enable_interrupts();
 }
@@ -55,6 +77,8 @@ void setup_config(void)
 //------------------------------------------------------------------------------
 void setup_pps(void)
 {
+    int i = 0;
+
     SYSKEY = 0x0;         //i dont know what these do
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;
@@ -63,6 +87,8 @@ void setup_pps(void)
     U1RXRbits.U1RXR = 0b0001; // Set RX to RPG8
     RPG7Rbits.RPG7R = 0b0001; // Set TX to RPG7
     RPD0Rbits.RPD0R = 0b1100; // set OC1 PWM output to RD0
+    RPB14Rbits.RPB14R = 0b1011; // set OC2 PWM output to RB14
+    RPB9Rbits.RPB9R = 0b1011;   // set OC4 PWM output to RB9
     //RPB7Rbits.RPB7R = 0x000C;
     CFGCONbits.IOLOCK = 1;    // locks config
 
@@ -70,6 +96,13 @@ void setup_pps(void)
     ANSELGbits.ANSG8 = 0;     // sets G8 to digital
 
     SYSKEY = 0x0;
+
+
+    // wait for settings to take effect
+    while(i<2000){
+        i++;
+    }
+    i = 0;
 }
 
 //------------------------------------------------------------------------------

@@ -2,11 +2,11 @@
  * File:   newmain.c
  * Author: Josh Hannan
  *
- * When the WiFi module gets a command, it sends a carriage return, newline,
- * the command that was sent, another carriage return, newline, AOK, then
- * another carriage return and newline, then "<2.45> " which is the firmware
+ * When the WiFi module gets a regular command, it sends a carriage return, newline,
+ * the command that was sent, another carriage return, newline, AOK/ERR, then
+ * another carriage return and newline, then "<4.00> " which is the firmware
  * version number plus a space.
- * 15 or 16 more characters than the original command.
+ * usually 14 more characters than the original command.
  *
  * In configuration commands, spaces in the command are still spaces, but spaces
  * in the parameters of the commands need to be $.
@@ -21,6 +21,8 @@
 #include "proc/p32mz2048ech100.h"
 #include "p32xxxx.h"
 #include "wifi.h"
+#include "motor.h"
+
 
 #pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
@@ -95,29 +97,45 @@ int main(int argc, char** argv) {
     setup_uart();
     setup_pps();
 
-    // wait for settings to take effect
-    while(i<2000){
-        i++;
-    }
-    i = 0;
-
-
-    // set configuration for wifi: not needed anymore
+    // set configuration for wifi
     wifi_reboot();
     wifi_set_real_config();
-        
-    //wifi_data_start();
-    while(i<2000){
-        i++;
+    
+    while(i<10000000){
+            i++;
     }
     i = 0;    
 
 
+
     while (j < 2000) {
         action = rx_command();
-        while(i<100000){
-            i++;
+
+        switch(action) {
+            case ROBOT_NOP:
+                robot_nop();
+                break;
+            case ROBOT_FORWARD:
+                robot_forward();
+                break;
+            case ROBOT_BACK:
+                robot_back();
+                break;
+            case ROBOT_LEFT:
+                robot_left();
+                break;
+            case ROBOT_RIGHT:
+                robot_right();
+                break;
+            case ROBOT_KICK:
+                robot_kick();
+                break;
+            default:
+                robot_nop();
+                break;
         }
+
+
         i = 0;
         j = j + 1;
         if (j > 1950) { j = 0; }

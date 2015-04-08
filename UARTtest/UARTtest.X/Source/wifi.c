@@ -10,52 +10,14 @@
 
 #include "wifi.h"
 
-void fail_wait(void)
-{
+void fail_wait(void) {
     while(1)
     {
         continue;
     }
 }
 
-//------------------------------------------------------------------------------
-//  join_steelmesh
-//  sets WPA passphrase and joins the steelmesh WiFi network
-//
-//------------------------------------------------------------------------------
-void wifi_join_steelmesh()
-{
-    char *SET_WLAN_PHRASE = "set wlan phrase wittytrain\r";
-    char *JOIN_STEELMESH = "join steelmesh\r";
-    char *ENTER_CMD = "$$$";
-    char *EXIT_CMD = "exit\r";
-
-    // enter command mode
-    tx_string(ENTER_CMD);
-    if(rx_string(3) == WIFI_FAIL) {
-        fail_wait();
-    }
-
-    // join the network
-    tx_string(JOIN_STEELMESH);
-    if(rx_string(strlen(JOIN_STEELMESH)+127) == WIFI_FAIL) {
-        fail_wait();
-    }
-
-    // exit command mode to go to data mode
-    tx_string(EXIT_CMD);
-    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
-        fail_wait();
-    }
-}
-
-//------------------------------------------------------------------------------
-//  wifi_open_config
-//  Enters Command mode and opens a file that contains saved configuration
-//  settings and applies them
-//------------------------------------------------------------------------------
-void wifi_open_config(void)
-{
+void wifi_open_config(void) {
     int i = 0;
     char bot_id = '1';
     char RESPONSE [50] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
@@ -101,10 +63,8 @@ void wifi_open_config(void)
 //------------------------------------------------------------------------------
 //  wifi_update_device
 //  Updates the firmware
-//
 //------------------------------------------------------------------------------
-void wifi_update_device(void)
-{
+void wifi_update_device(void) {
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
     char *SET_DNS = "set dns backup rn.microchip.com\r";
@@ -142,44 +102,11 @@ void wifi_update_device(void)
 }
 
 //------------------------------------------------------------------------------
-//  wifi_open_connection
-//  opens a connection with the webserver
-//
-//------------------------------------------------------------------------------
-void wifi_open_connection(void)
-{
-    char *ENTER_CMD = "$$$";
-    char *EXIT_CMD = "exit\r";
-    char *OPEN = "open 192.168.1.7 3000\r";
-    char *RUN = "run web_app\r";
-
-    // enter command mode to load file
-    tx_string(ENTER_CMD);
-    if(rx_string(3) == WIFI_FAIL) {
-        fail_wait();
-    }
-
-    // open the twitch configuration file and update settings
-    tx_string(RUN);
-    if(rx_string(strlen(RUN)+20) == WIFI_FAIL) {
-    //if(rx_string(strlen(OPEN)+42) == WIFI_FAIL) {
-        fail_wait();
-    }
-
-    // exit command mode to go to data mode
-    tx_string(EXIT_CMD);
-    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
-        fail_wait();
-    }
-}
-
-//------------------------------------------------------------------------------
 //  wifi_set_config
 //  sends configuration commands to the Wifi
 //  module
 //------------------------------------------------------------------------------
-void wifi_set_config()
-{
+void wifi_set_config() {
     char RESPONSE [50] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
     // commands to enter and exit command mode
     char *ENTER_CMD = "$$$";
@@ -281,8 +208,11 @@ void wifi_set_config()
     }
 }
 
-void wifi_set_real_config()
-{
+//------------------------------------------------------------------------------
+//   wifi_set_real_config
+//   sets the configuration settings to connect to the wifi network and webserver
+//------------------------------------------------------------------------------
+void wifi_set_real_config() {
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
     char *SET_IP_PROTO = "set i p 18\r";
@@ -340,8 +270,11 @@ void wifi_set_real_config()
     
 }
 
-void wifi_reboot()
-{
+//------------------------------------------------------------------------------
+//   wifi_reboot
+//   performs a factory reset on the wifi module and reboots it
+//------------------------------------------------------------------------------
+void wifi_reboot() {
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
     char *REBOOT = "reboot\r";

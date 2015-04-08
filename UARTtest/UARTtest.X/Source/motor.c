@@ -8,77 +8,94 @@
 #include "motor.h"
 
 
-void turn_right(void)
+void robot_nop(void)
 {
-    int i;
+    int i = 0;
+    // do nothing
+    while(i<50000000){
+            i++;
+        }
+}
+
+void robot_right(void)
+{
+    int i = 0;
     // set pwm for right motor to go forward
     // set pwm for left motor to not move
 
     // wait for a short amount of time
 
     // set them back to zero
+    PR2 = 0x00C7;
+    OC1CONSET = 0x8000;
+
+    PR3 = 0x00A3;
+    OC2CONSET = 0x8000;
+    
+    while (i < 50000000) { i++; }
+    OC1CONCLR = 0x8000;
+    OC2CONCLR = 0x8000;
 }
 
-void turn_left(void)
+void robot_left(void)
 {
-    int i;
+    int i = 0;
     // set pwm for left motor to go forward
     // set pwm for right motor to not move
 
     // wait for a short amount of time
 
     // set them back to zero
-
+while(i<50000000){
+            i++;
+        }
 }
 
-void forward(void)
+void robot_forward(void)
 {
-    int i;
+    int i = 0;
     // decrease period of pwm and set GPIO pin for left motor to go forward
     // decrease period of pwm and set GPIO pin for right motor to go forward
 
     // wait for a short amount of time
 
     // set them back to idle
-
+    while(i<50000000){
+            i++;
+        }
 }
 
-void backward(void)
+void robot_back(void)
 {
-    int i;
+    int i = 0;
     // set pwm for left motor to go backward
     // set pwm for right motor to go backward
 
     // wait for a short amount of time
 
     // set them back to zero
-
+while(i<50000000){
+            i++;
+        }
 }
 
-void paddle_kick(void)
+void robot_kick(void)
 {
-    int i;
+    int i = 0;
     // set output to rotate paddle to kick
 
     // reset angle of paddle
+    OC3R = 0x0046;
+    OC3RS = 0x0046;
+
 
     // set paddle motor to zero
+    while(i<50000000){
+            i++;
+    }
+    OC3R = 0x006F;
+    OC3RS = 0x006F;
 }
 
-int command_execute(char *command)
-{
-    if (command == 'left') {
-        turn_left();
-    } else if (command == 'right') {
-        turn_right();
-    } else if (command == 'forward') {
-        forward();
-    } else if (command == 'backward') {
-        backward();
-    } else if (command == 'kick') {
-        paddle_kick();
-    } else {
-        return MOTOR_FAIL;
-    }
-}
+
 

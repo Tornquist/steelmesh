@@ -43,8 +43,8 @@ void tx_char(unsigned char c)
 
 //------------------------------------------------------------------------------
 //  rx_command
-//  receives a string of length ascii characters
-//  over UART
+//  receives a command messge from the webserver and returns a flag based on
+//  what command was sent
 //------------------------------------------------------------------------------
 int rx_command()
 {
@@ -101,7 +101,7 @@ int rx_string(int length)
     }
 
     if(valid == 3) {
-        return WIFI_SUCCESS;
+        return UART_SUCCESS;
     }
     return UART_SUCCESS;
 }
