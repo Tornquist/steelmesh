@@ -8,15 +8,7 @@
 #ifndef WIFI_H
 #define	WIFI_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "proc/p32mz2048ech100.h"
-#include "p32xxxx.h"
-#include <string.h>
-#include "uart.h"
-
-#define FPB 99000000L // Frequency Peripheral Bus = 99MHz
-#define BAUDRATE 9600
+#include "system_include.h"
 
 #define WIFI_SUCCESS 1
 #define WIFI_FAIL 0

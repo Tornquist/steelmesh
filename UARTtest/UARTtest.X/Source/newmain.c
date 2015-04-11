@@ -15,18 +15,14 @@
  * Created on March 11, 2015, 1:51 PM
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/attribs.h>
-#include "proc/p32mz2048ech100.h"
-#include "p32xxxx.h"
+#include "system_include.h"
 #include "wifi.h"
 #include "motor.h"
-
+#include "uart.h"
 
 #pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
-#pragma config ICESEL =     ICS_PGx2
+#pragma config ICESEL =     ICS_PGx1
 #pragma config TRCEN =      ON
 #pragma config BOOTISA =    MIPS32
 #pragma config FECCCON =    OFF_UNLOCKED
@@ -86,11 +82,6 @@ int main(int argc, char** argv) {
     int i = 0;
     int j = 0;
     int action;
-    char *HELLO_WORLD = "Hello World";
-    char *START = "GET /feeds/1/start \n\n";
-    char *DATA_HEADER = "GET /feeds/1/image?data=";
-    char *DATA_FOOTER = " \n\n";
-    char *END = "GET /feeds/1/end \n\n";
 
     // call configuration settings for uart and pps
     setup_config();
@@ -104,16 +95,55 @@ int main(int argc, char** argv) {
     while(i<10000000){
             i++;
     }
-    i = 0;    
+    i = 0;
 
-
-
+    //THIS DOESN'T DO ANYTHING BECAUSE EVERYTHING IS BROKEN
+    while(1) {
+        PORTFbits.RF3 = 1;
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        PORTBbits.RB6 = 1;
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        i = 0;
+        while(i<10000){
+            i++;
+        }
+        PORTFbits.RF3 = 0;
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        PORTBbits.RB6 = 0;
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        i = 0;
+        while(i<10000){
+            i++;
+        }
+    }
     while (j < 2000) {
-        action = rx_command();
-
+        //action = rx_command();
+        action = ROBOT_KICK;
+        //while(i<10000000){
+        //while(i<1000){
+        //    i++;
+        //}
+        //i = 0;
+        
         switch(action) {
             case ROBOT_NOP:
-                robot_nop();
+                robot_kick();
                 break;
             case ROBOT_FORWARD:
                 robot_forward();
@@ -131,10 +161,9 @@ int main(int argc, char** argv) {
                 robot_kick();
                 break;
             default:
-                robot_nop();
+                robot_kick();
                 break;
         }
-
 
         i = 0;
         j = j + 1;

@@ -5,6 +5,8 @@
  * Created on March 26, 2015, 12:56 PM
  */
 
+#include "system_include.h"
+
 #ifndef UART_H
 #define	UART_H
 

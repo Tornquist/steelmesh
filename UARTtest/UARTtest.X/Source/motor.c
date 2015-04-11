@@ -26,15 +26,15 @@ void robot_right(void)
     // wait for a short amount of time
 
     // set them back to zero
-    PR2 = 0x00C7;
-    OC1CONSET = 0x8000;
+    //PR2 = 0x00C7;
+    //OC1CONSET = 0x8000;
 
-    PR3 = 0x00A3;
-    OC2CONSET = 0x8000;
+    //PR3 = 0x00A3;
+    //OC2CONSET = 0x8000;
     
     while (i < 50000000) { i++; }
-    OC1CONCLR = 0x8000;
-    OC2CONCLR = 0x8000;
+    //OC1CONCLR = 0x8000;
+    //OC2CONCLR = 0x8000;
 }
 
 void robot_left(void)
@@ -85,16 +85,18 @@ void robot_kick(void)
     // set output to rotate paddle to kick
 
     // reset angle of paddle
-    OC3R = 0x0046;
-    OC3RS = 0x0046;
 
-
+    OC1RS = 0x0000;
     // set paddle motor to zero
-    while(i<50000000){
+    //while(i<50000000){
+    while(i<500000){
             i++;
     }
-    OC3R = 0x006F;
-    OC3RS = 0x006F;
+
+    OC1RS = 0x8000;
+    while(i<1000000){
+            i++;
+    }
 }
 
 
