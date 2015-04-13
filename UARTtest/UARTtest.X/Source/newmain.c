@@ -101,14 +101,17 @@ int main(int argc, char** argv) {
     //T2CONSET = 0x8000;    // enable timer 2
     //OC1CONSET = 0x8000;   // enable Output Compare (PWM)
 
-    LATBbits.LATB8 = 1; // set direction to 1
+    LATBbits.LATB8 = 1; // set left direction to 1
     LATBbits.LATB10 = 1; // set !reset to 1
+
+    LATBbits.LATB13 = 0; // set right direction to 1
+    LATBbits.LATB5 = 1;
 
     //THIS DOESN'T DO ANYTHING BECAUSE EVERYTHING IS BROKEN
     while(1) {
         // set all I/O pins
-        LATBbits.LATB13 = 1; // right stepper direction, pin 28
-        LATBbits.LATB5 = 1; // right stepper !reset, pin 11
+        //LATBbits.LATB13 = 1; // right stepper direction, pin 28
+        //LATBbits.LATB5 = 1; // right stepper !reset, pin 11
         //LATBbits.LATB8 = 1; // left stepper direction, pin 21
         //LATBbits.LATB10 = 1; // left stepper !reset, pin 23
         LATBbits.LATB4 = 1; // dip 1, pin 12
@@ -120,13 +123,13 @@ int main(int argc, char** argv) {
         LATBbits.LATB9 = 1; // OC3, pin 22
 
         i = 0;
-        while(i<1000000 / 10){
+        while(i<1000000 / 100){
             i++;
         }
 
         // clear all I/O pins
-        LATBbits.LATB13 = 0; // right stepper direction, pin 28
-        LATBbits.LATB5 = 0; // right stepper !reset, pin 11
+        //LATBbits.LATB13 = 0; // right stepper direction, pin 28
+        //LATBbits.LATB5 = 0; // right stepper !reset, pin 11
         //LATBbits.LATB8 = 0; // left stepper direction, pin 21
         //LATBbits.LATB10 = 0; // left stepper !reset, pin 23
         LATBbits.LATB4 = 0; // dip 1, pin 12
@@ -138,7 +141,7 @@ int main(int argc, char** argv) {
         LATBbits.LATB9 = 0; // OC3, pin 22
         
         i = 0;
-        while(i<1000000 / 10){
+        while(i<1000000 / 100){
             i++;
         }
          
