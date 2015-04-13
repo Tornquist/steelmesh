@@ -20,6 +20,7 @@
 #include "motor.h"
 #include "uart.h"
 
+
 #pragma config DEBUG =      ON
 #pragma config JTAGEN =     OFF
 #pragma config ICESEL =     ICS_PGx1
