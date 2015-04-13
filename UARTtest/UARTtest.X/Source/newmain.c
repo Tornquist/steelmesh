@@ -107,6 +107,42 @@ int main(int argc, char** argv) {
     LATBbits.LATB13 = 0; // set right direction to 1
     LATBbits.LATB5 = 1;
 
+    //400 000 Total for entire kick cycle
+    // High 32000 and Low 368000 = 90
+    // High 10000 and Low 390000 = 0 = Down Completely
+    while(1) {
+        j = 0;
+        while (j < 30) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            while(i< 32000){
+                i++;
+            }
+            i = 0;
+            LATBbits.LATB2 = 0; // OC1, pin 14
+
+            while(i< 368000){
+                i++;
+            }
+            i = 0;
+            j = j + 1;
+        }
+                j = 0;
+        while (j < 250) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            while(i< 10000){
+                i++;
+            }
+            i = 0;
+            LATBbits.LATB2 = 0; // OC1, pin 14
+            while(i< 390000){
+                i++;
+            }
+            i = 0;
+            j = j + 1;
+        }
+    }
+
+
     //THIS DOESN'T DO ANYTHING BECAUSE EVERYTHING IS BROKEN
     while(1) {
         // set all I/O pins
@@ -118,9 +154,11 @@ int main(int argc, char** argv) {
         LATBbits.LATB3 = 1; // dip 2, pin 13
 
         // set all OCx pins
-        LATBbits.LATB2 = 1; // OC1, pin 14
-        LATBbits.LATB14 = 1; // OC2, pin 29
-        LATBbits.LATB9 = 1; // OC3, pin 22
+        
+        //LATBbits.LATB14 = 1; // OC2, pin 29
+        //LATBbits.LATB9 = 1; // OC3, pin 22
+
+        LATFbits.LATF3 = 1; // old servo
 
         i = 0;
         while(i<1000000 / 100){
@@ -137,8 +175,10 @@ int main(int argc, char** argv) {
 
         // clear all OCx pins
         LATBbits.LATB2 = 0; // OC1, pin 14
-        LATBbits.LATB14 = 0; // OC2, pin 29
-        LATBbits.LATB9 = 0; // OC3, pin 22
+        //LATBbits.LATB14 = 0; // OC2, pin 29
+        //LATBbits.LATB9 = 0; // OC3, pin 22
+
+        LATFbits.LATF3 = 0; // old servo
         
         i = 0;
         while(i<1000000 / 100){
@@ -147,6 +187,7 @@ int main(int argc, char** argv) {
          
         
     }
+    j = 0;
     while (j < 2000) {
         //action = rx_command();
         action = ROBOT_KICK;

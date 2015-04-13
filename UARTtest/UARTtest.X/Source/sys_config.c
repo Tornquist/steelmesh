@@ -110,7 +110,7 @@ void setup_pps(void)
 
     //I CHANGED THE BELOW ONE THIS MORNING (4/11/15)
     //RPF3Rbits.RPF3R = 0b1100; // set OC1 PWM output to RD0
-    RPB2Rbits.RPB2R = 0b1100; // set OC1 PWM output to B2
+    //RPB2Rbits.RPB2R = 0b1100; // set OC1 PWM output to B2
     //RPB14Rbits.RPB14R = 0b1011; // set OC2 PWM output to RB14
     //RPB9Rbits.RPB9R = 0b1011;   // set OC4 PWM output to RB9
     //RPB7Rbits.RPB7R = 0x000C;
