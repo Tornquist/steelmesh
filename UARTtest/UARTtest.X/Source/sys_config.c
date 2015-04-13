@@ -26,6 +26,7 @@ void setup_config(void)
     TRISBCLR = 0xFFFF;
     TRISGCLR = 0xFFFF;
     TRISDCLR = 0xFFFF;
+    TRISECLR = 0xFFFF;
     TRISFCLR = 0xFFFF;
 
 
@@ -34,6 +35,7 @@ void setup_config(void)
     ANSELBCLR = 0xFFFF;
     ANSELGCLR = 0xFFFF;
     ANSELDCLR = 0xFFFF;
+    ANSELECLR = 0xFFFF;
     ANSELFCLR = 0xFFFF;
 
     //THESE LINES DON'T SEEM TO DO ANYTHING
@@ -45,7 +47,7 @@ void setup_config(void)
     CFGCONbits.JTAGEN = 0;
 
     //COMPILES UNCOMMENTED, WE WERE JUST TRYING TO GET IT TO NOT SUCK
-    /*
+    
     // configure Output Compare (PWM)
     OC1CON = 0x0000;
     T2CON = 0x0000;
@@ -57,10 +59,10 @@ void setup_config(void)
     OC1CON = 0x0006;      // set mode to PWM
     PR2 = 0xFFFFF;         // sets period of PWM
     
-    T2CONSET = 0x8000;    // enable timer 2
-    OC1CONSET = 0x8000;   // enable Output Compare (PWM)
+    //T2CONSET = 0x8000;    // enable timer 2
+    //OC1CONSET = 0x8000;   // enable Output Compare (PWM)
 
-
+/*
     // output compare 2
     OC2CON = 0x0000;
     OC2R = 0x0064;        // set initial duty cycle
@@ -103,14 +105,15 @@ void setup_pps(void)
     RPG7Rbits.RPG7R = 0b0001; // Set TX to RPG7
 
     //I ADDED THESE LINES THIS MORNING (4/11/15)
-    RPF3Rbits.RPF3R = 0b0000;
-    RPB6Rbits.RPB6R = 0b0000;
+    //RPF3Rbits.RPF3R = 0b0000;
+    //RPB6Rbits.RPB6R = 0b0000;
 
     //I CHANGED THE BELOW ONE THIS MORNING (4/11/15)
     //RPF3Rbits.RPF3R = 0b1100; // set OC1 PWM output to RD0
-    RPB14Rbits.RPB14R = 0b1011; // set OC2 PWM output to RB14
-    RPB9Rbits.RPB9R = 0b1011;   // set OC4 PWM output to RB9
-    RPB7Rbits.RPB7R = 0x000C;
+    RPB2Rbits.RPB2R = 0b1100; // set OC1 PWM output to B2
+    //RPB14Rbits.RPB14R = 0b1011; // set OC2 PWM output to RB14
+    //RPB9Rbits.RPB9R = 0b1011;   // set OC4 PWM output to RB9
+    //RPB7Rbits.RPB7R = 0x000C;
     CFGCONbits.IOLOCK = 1;    // locks config
 
     ANSELGbits.ANSG7 = 0;     // sets G7 to digital

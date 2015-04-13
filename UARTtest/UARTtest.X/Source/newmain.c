@@ -90,48 +90,59 @@ int main(int argc, char** argv) {
     setup_pps();
 
     // set configuration for wifi
-    wifi_reboot();
-    wifi_set_real_config();
+    //wifi_reboot();
+    //wifi_set_real_config();
     
     while(i<10000000){
             i++;
     }
     i = 0;
 
+    //T2CONSET = 0x8000;    // enable timer 2
+    //OC1CONSET = 0x8000;   // enable Output Compare (PWM)
+
+    LATBbits.LATB8 = 1; // set direction to 1
+    LATBbits.LATB10 = 1; // set !reset to 1
+
     //THIS DOESN'T DO ANYTHING BECAUSE EVERYTHING IS BROKEN
     while(1) {
-        PORTFbits.RF3 = 1;
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        PORTBbits.RB6 = 1;
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
+        // set all I/O pins
+        LATBbits.LATB13 = 1; // right stepper direction, pin 28
+        LATBbits.LATB5 = 1; // right stepper !reset, pin 11
+        //LATBbits.LATB8 = 1; // left stepper direction, pin 21
+        //LATBbits.LATB10 = 1; // left stepper !reset, pin 23
+        LATBbits.LATB4 = 1; // dip 1, pin 12
+        LATBbits.LATB3 = 1; // dip 2, pin 13
+
+        // set all OCx pins
+        LATBbits.LATB2 = 1; // OC1, pin 14
+        LATBbits.LATB14 = 1; // OC2, pin 29
+        LATBbits.LATB9 = 1; // OC3, pin 22
+
         i = 0;
-        while(i<10000){
+        while(i<1000000 / 10){
             i++;
         }
-        PORTFbits.RF3 = 0;
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        PORTBbits.RB6 = 0;
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
-        asm("nop");
+
+        // clear all I/O pins
+        LATBbits.LATB13 = 0; // right stepper direction, pin 28
+        LATBbits.LATB5 = 0; // right stepper !reset, pin 11
+        //LATBbits.LATB8 = 0; // left stepper direction, pin 21
+        //LATBbits.LATB10 = 0; // left stepper !reset, pin 23
+        LATBbits.LATB4 = 0; // dip 1, pin 12
+        LATBbits.LATB3 = 0; // dip 2, pin 13
+
+        // clear all OCx pins
+        LATBbits.LATB2 = 0; // OC1, pin 14
+        LATBbits.LATB14 = 0; // OC2, pin 29
+        LATBbits.LATB9 = 0; // OC3, pin 22
+        
         i = 0;
-        while(i<10000){
+        while(i<1000000 / 10){
             i++;
         }
+         
+        
     }
     while (j < 2000) {
         //action = rx_command();
