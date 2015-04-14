@@ -19,6 +19,7 @@
 #include "wifi.h"
 #include "motor.h"
 #include "uart.h"
+#include "util.h"
 
 
 #pragma config DEBUG =      ON
@@ -75,13 +76,17 @@
 #pragma config CSEQ =       0xffff
 
 int main(int argc, char** argv) {
+    int i = 0;
     int j = 0;
+    char id = '0';
     int action;
 
     // Call Configuration Settings for UART and PPS
     setup_config();
     setup_uart();
     setup_pps();
+
+    id = destructive_device_id_read();
 
     // Set Configuration for WiFi
     //wifi_reboot();

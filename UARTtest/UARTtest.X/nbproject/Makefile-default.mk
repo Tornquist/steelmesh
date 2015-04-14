@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Source/newmain.c Source/wifi.c Source/motor.c Source/uart.c Source/sys_config.c
+SOURCEFILES_QUOTED_IF_SPACED=Source/newmain.c Source/wifi.c Source/motor.c Source/uart.c Source/sys_config.c Source/util.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/newmain.o ${OBJECTDIR}/Source/wifi.o ${OBJECTDIR}/Source/motor.o ${OBJECTDIR}/Source/uart.o ${OBJECTDIR}/Source/sys_config.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Source/newmain.o.d ${OBJECTDIR}/Source/wifi.o.d ${OBJECTDIR}/Source/motor.o.d ${OBJECTDIR}/Source/uart.o.d ${OBJECTDIR}/Source/sys_config.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/newmain.o ${OBJECTDIR}/Source/wifi.o ${OBJECTDIR}/Source/motor.o ${OBJECTDIR}/Source/uart.o ${OBJECTDIR}/Source/sys_config.o ${OBJECTDIR}/Source/util.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Source/newmain.o.d ${OBJECTDIR}/Source/wifi.o.d ${OBJECTDIR}/Source/motor.o.d ${OBJECTDIR}/Source/uart.o.d ${OBJECTDIR}/Source/sys_config.o.d ${OBJECTDIR}/Source/util.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Source/newmain.o ${OBJECTDIR}/Source/wifi.o ${OBJECTDIR}/Source/motor.o ${OBJECTDIR}/Source/uart.o ${OBJECTDIR}/Source/sys_config.o
+OBJECTFILES=${OBJECTDIR}/Source/newmain.o ${OBJECTDIR}/Source/wifi.o ${OBJECTDIR}/Source/motor.o ${OBJECTDIR}/Source/uart.o ${OBJECTDIR}/Source/sys_config.o ${OBJECTDIR}/Source/util.o
 
 # Source Files
-SOURCEFILES=Source/newmain.c Source/wifi.c Source/motor.c Source/uart.c Source/sys_config.c
+SOURCEFILES=Source/newmain.c Source/wifi.c Source/motor.c Source/uart.c Source/sys_config.c Source/util.c
 
 
 CFLAGS=
@@ -124,6 +124,12 @@ ${OBJECTDIR}/Source/sys_config.o: Source/sys_config.c  nbproject/Makefile-${CND_
 	@${RM} ${OBJECTDIR}/Source/sys_config.o 
 	@${FIXDEPS} "${OBJECTDIR}/Source/sys_config.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Source/sys_config.o.d" -o ${OBJECTDIR}/Source/sys_config.o Source/sys_config.c   
 	
+${OBJECTDIR}/Source/util.o: Source/util.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/util.o.d 
+	@${RM} ${OBJECTDIR}/Source/util.o 
+	@${FIXDEPS} "${OBJECTDIR}/Source/util.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_ICD3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Source/util.o.d" -o ${OBJECTDIR}/Source/util.o Source/util.c   
+	
 else
 ${OBJECTDIR}/Source/newmain.o: Source/newmain.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/Source" 
@@ -154,6 +160,12 @@ ${OBJECTDIR}/Source/sys_config.o: Source/sys_config.c  nbproject/Makefile-${CND_
 	@${RM} ${OBJECTDIR}/Source/sys_config.o.d 
 	@${RM} ${OBJECTDIR}/Source/sys_config.o 
 	@${FIXDEPS} "${OBJECTDIR}/Source/sys_config.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Source/sys_config.o.d" -o ${OBJECTDIR}/Source/sys_config.o Source/sys_config.c   
+	
+${OBJECTDIR}/Source/util.o: Source/util.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/util.o.d 
+	@${RM} ${OBJECTDIR}/Source/util.o 
+	@${FIXDEPS} "${OBJECTDIR}/Source/util.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/Source/util.o.d" -o ${OBJECTDIR}/Source/util.o Source/util.c   
 	
 endif
 

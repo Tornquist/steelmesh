@@ -6,6 +6,7 @@
  */
 
 #include "motor.h"
+#include "util.h"
 
 void robot_nop(void) { int i = 0; while(i<10000000){ i++; } }
 
@@ -63,12 +64,5 @@ void robot_kick(void) {
         LATBbits.LATB2 = 0; // OC1, pin 14
         idle_delay(390000);
         j = j + 1;
-    }
-}
-
-void idle_delay(int value) {
-    int i = 0;
-    while(i< value){
-        i++;
     }
 }
