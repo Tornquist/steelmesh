@@ -13,6 +13,7 @@
 #define MOTOR_SUCCESS 1
 #define MOTOR_FAIL 0
 
+void robot_move(int lDir, int rDir, int time);
 void robot_nop(void);
 void robot_right(void);
 void robot_left(void);

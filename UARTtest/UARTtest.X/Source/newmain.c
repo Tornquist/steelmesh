@@ -74,118 +74,22 @@
 #pragma config TSEQ =       0xffff
 #pragma config CSEQ =       0xffff
 
-
-
-/*
- * 
- */
 int main(int argc, char** argv) {
-    int i = 0;
     int j = 0;
     int action;
 
-    // call configuration settings for uart and pps
+    // Call Configuration Settings for UART and PPS
     setup_config();
     setup_uart();
     setup_pps();
 
-    // set configuration for wifi
+    // Set Configuration for WiFi
     //wifi_reboot();
     //wifi_set_real_config();
-    
-    while(i<10000000){
-            i++;
-    }
-    i = 0;
 
+    idle_delay(10000000);
 
-    //T2CONSET = 0x8000;    // enable timer 2
-    //OC1CONSET = 0x8000;   // enable Output Compare (PWM)
-
-    LATBbits.LATB8 = 1; // set left direction to 1
-    LATBbits.LATB10 = 1; // set !reset to 1
-
-    LATBbits.LATB13 = 0; // set right direction to 1
-    LATBbits.LATB5 = 1;
-
-    //400 000 Total for entire kick cycle
-    // High 32000 and Low 368000 = 90
-    // High 10000 and Low 390000 = 0 = Down Completely
-//    while(1) {
-//        j = 0;
-//        while (j < 20) {
-//            LATBbits.LATB2 = 1; // OC1, pin 14
-//            while(i< 32000){
-//                i++;
-//            }
-//            i = 0;
-//            LATBbits.LATB2 = 0; // OC1, pin 14
-//
-//            while(i< 368000){
-//                i++;
-//            }
-//            i = 0;
-//            j = j + 1;
-//        }
-//                j = 0;
-//        while (j < 250) {
-//            LATBbits.LATB2 = 1; // OC1, pin 14
-//            while(i< 10000){
-//                i++;
-//            }
-//            i = 0;
-//            LATBbits.LATB2 = 0; // OC1, pin 14
-//            while(i< 390000){
-//                i++;
-//            }
-//            i = 0;
-//            j = j + 1;
-//        }
-//    }
-
-//    j = 0;
-//    while(j<800) {
-//        j++;
-//        // set all I/O pins
-//        //LATBbits.LATB13 = 1; // right stepper direction, pin 28
-//        //LATBbits.LATB5 = 1; // right stepper !reset, pin 11
-//        //LATBbits.LATB8 = 1; // left stepper direction, pin 21
-//        //LATBbits.LATB10 = 1; // left stepper !reset, pin 23
-//        LATBbits.LATB4 = 1; // dip 1, pin 12
-//        LATBbits.LATB3 = 1; // dip 2, pin 13
-//
-//        // set all OCx pins
-//
-//        LATBbits.LATB14 = 1; // OC2, pin 29
-//        LATBbits.LATB9 = 1; // OC3, pin 22
-//
-//
-//        i = 0;
-//        while(i<1000000 / 100){
-//            i++;
-//        }
-//
-//        // clear all I/O pins
-//        //LATBbits.LATB13 = 0; // right stepper direction, pin 28
-//        //LATBbits.LATB5 = 0; // right stepper !reset, pin 11
-//        //LATBbits.LATB8 = 0; // left stepper direction, pin 21
-//        //LATBbits.LATB10 = 0; // left stepper !reset, pin 23
-//        LATBbits.LATB4 = 0; // dip 1, pin 12
-//        LATBbits.LATB3 = 0; // dip 2, pin 13
-//
-//        // clear all OCx pins
-//        LATBbits.LATB14 = 0; // OC2, pin 29
-//        LATBbits.LATB9 = 0; // OC3, pin 22
-//
-//
-//        i = 0;
-//        while(i<1000000 / 100){
-//            i++;
-//        }
-//
-//
-//    }
-
+    //Robot Demo
     while(1) {
         robot_forward();
         robot_nop();
@@ -199,18 +103,11 @@ int main(int argc, char** argv) {
         robot_nop();
     }
 
-
-
     j = 0;
     while (j < 2000) {
         //action = rx_command();
         action = ROBOT_KICK;
-        //while(i<10000000){
-        //while(i<1000){
-        //    i++;
-        //}
-        //i = 0;
-        
+                
         switch(action) {
             case ROBOT_NOP:
                 robot_kick();
@@ -235,7 +132,6 @@ int main(int argc, char** argv) {
                 break;
         }
 
-        i = 0;
         j = j + 1;
         if (j > 1950) { j = 0; }
     }
