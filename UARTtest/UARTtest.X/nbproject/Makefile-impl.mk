@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Twitch_Robots_practice.X
+PROJECTNAME=UARTtest.X
 
 # Active Configuration
 DEFAULTCONF=default

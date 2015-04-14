@@ -20,6 +20,7 @@ void robot_left(void);
 void robot_forward(void);
 void robot_back(void);
 void robot_kick(void);
+void idle_delay(int value);
 
 #endif	/* MOTOR_H */
 
