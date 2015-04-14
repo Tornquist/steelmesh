@@ -12,7 +12,7 @@ void robot_nop(void)
 {
     int i = 0;
     // do nothing
-    while(i<50000000){
+    while(i<10000000){
             i++;
         }
 }
@@ -20,82 +20,202 @@ void robot_nop(void)
 void robot_right(void)
 {
     int i = 0;
-    // set pwm for right motor to go forward
-    // set pwm for left motor to not move
+    int j = 0;
+    LATBbits.LATB8 = 0; // set left direction to 0
+    LATBbits.LATB10 = 1; // set !reset to 1
 
-    // wait for a short amount of time
+    LATBbits.LATB13 = 0; // set right direction to 0
+    LATBbits.LATB5 = 1;
 
-    // set them back to zero
-    //PR2 = 0x00C7;
-    //OC1CONSET = 0x8000;
+    while(j<400) {
+        j++;
+        // set all I/O pins
+        LATBbits.LATB4 = 1; // dip 1, pin 12
+        LATBbits.LATB3 = 1; // dip 2, pin 13
 
-    //PR3 = 0x00A3;
-    //OC2CONSET = 0x8000;
-    
-    while (i < 50000000) { i++; }
-    //OC1CONCLR = 0x8000;
-    //OC2CONCLR = 0x8000;
+        // set all OCx pins
+
+        LATBbits.LATB14 = 1; // OC2, pin 29
+        LATBbits.LATB9 = 1; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
+            i++;
+        }
+
+        LATBbits.LATB4 = 0; // dip 1, pin 12
+        LATBbits.LATB3 = 0; // dip 2, pin 13
+
+        // clear all OCx pins
+        LATBbits.LATB14 = 0; // OC2, pin 29
+        LATBbits.LATB9 = 0; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
+            i++;
+        }
+    }
 }
 
 void robot_left(void)
 {
     int i = 0;
-    // set pwm for left motor to go forward
-    // set pwm for right motor to not move
+    int j = 0;
+    LATBbits.LATB8 = 1; // set left direction to 0
+    LATBbits.LATB10 = 1; // set !reset to 1
 
-    // wait for a short amount of time
+    LATBbits.LATB13 = 1; // set right direction to 0
+    LATBbits.LATB5 = 1;
 
-    // set them back to zero
-while(i<50000000){
+    while(j<400) {
+        j++;
+        // set all I/O pins
+        LATBbits.LATB4 = 1; // dip 1, pin 12
+        LATBbits.LATB3 = 1; // dip 2, pin 13
+
+        // set all OCx pins
+
+        LATBbits.LATB14 = 1; // OC2, pin 29
+        LATBbits.LATB9 = 1; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
             i++;
         }
+
+        LATBbits.LATB4 = 0; // dip 1, pin 12
+        LATBbits.LATB3 = 0; // dip 2, pin 13
+
+        // clear all OCx pins
+        LATBbits.LATB14 = 0; // OC2, pin 29
+        LATBbits.LATB9 = 0; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
+            i++;
+        }
+    }
 }
 
 void robot_forward(void)
 {
     int i = 0;
-    // decrease period of pwm and set GPIO pin for left motor to go forward
-    // decrease period of pwm and set GPIO pin for right motor to go forward
+    int j = 0;
+    LATBbits.LATB8 = 1; // set left direction to 1
+    LATBbits.LATB10 = 1; // set !reset to 1
 
-    // wait for a short amount of time
+    LATBbits.LATB13 = 0; // set right direction to 1
+    LATBbits.LATB5 = 1;
+    
+    while(j<800) {
+        j++;
+        // set all I/O pins
+        LATBbits.LATB4 = 1; // dip 1, pin 12
+        LATBbits.LATB3 = 1; // dip 2, pin 13
 
-    // set them back to idle
-    while(i<50000000){
+        // set all OCx pins
+
+        LATBbits.LATB14 = 1; // OC2, pin 29
+        LATBbits.LATB9 = 1; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
             i++;
         }
+
+        LATBbits.LATB4 = 0; // dip 1, pin 12
+        LATBbits.LATB3 = 0; // dip 2, pin 13
+
+        // clear all OCx pins
+        LATBbits.LATB14 = 0; // OC2, pin 29
+        LATBbits.LATB9 = 0; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
+            i++;
+        }
+    }
 }
 
 void robot_back(void)
 {
     int i = 0;
-    // set pwm for left motor to go backward
-    // set pwm for right motor to go backward
+    int j = 0;
+    LATBbits.LATB8 = 0; // set left direction to 0
+    LATBbits.LATB10 = 1; // set !reset to 1
 
-    // wait for a short amount of time
+    LATBbits.LATB13 = 1; // set right direction to 0
+    LATBbits.LATB5 = 1;
 
-    // set them back to zero
-while(i<50000000){
+    while(j<800) {
+        j++;
+        // set all I/O pins
+        LATBbits.LATB4 = 1; // dip 1, pin 12
+        LATBbits.LATB3 = 1; // dip 2, pin 13
+
+        // set all OCx pins
+
+        LATBbits.LATB14 = 1; // OC2, pin 29
+        LATBbits.LATB9 = 1; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
             i++;
         }
+
+        LATBbits.LATB4 = 0; // dip 1, pin 12
+        LATBbits.LATB3 = 0; // dip 2, pin 13
+
+        // clear all OCx pins
+        LATBbits.LATB14 = 0; // OC2, pin 29
+        LATBbits.LATB9 = 0; // OC3, pin 22
+
+
+        i = 0;
+        while(i<1000000 / 100){
+            i++;
+        }
+    }
 }
 
 void robot_kick(void)
 {
     int i = 0;
-    // set output to rotate paddle to kick
-
-    // reset angle of paddle
-
-    OC1RS = 0x0000;
-    // set paddle motor to zero
-    //while(i<50000000){
-    while(i<500000){
+    int j = 0;
+    while (j < 20) {
+        LATBbits.LATB2 = 1; // OC1, pin 14
+        while(i< 32000){
             i++;
+        }
+        i = 0;
+        LATBbits.LATB2 = 0; // OC1, pin 14
+
+        while(i< 368000){
+            i++;
+        }
+        i = 0;
+        j = j + 1;
     }
-
-    OC1RS = 0x8000;
-    while(i<1000000){
+            j = 0;
+    while (j < 250) {
+        LATBbits.LATB2 = 1; // OC1, pin 14
+        while(i< 10000){
             i++;
+        }
+        i = 0;
+        LATBbits.LATB2 = 0; // OC1, pin 14
+        while(i< 390000){
+            i++;
+        }
+        i = 0;
+        j = j + 1;
     }
 }
 
