@@ -108,14 +108,14 @@ int main(int argc, char** argv) {
         robot_nop();
     }
 
-    j = 0;
-    while (j < 2000) {
+
+    while (1) {
         //action = rx_command();
         action = ROBOT_KICK;
                 
         switch(action) {
             case ROBOT_NOP:
-                robot_kick();
+                robot_nop();
                 break;
             case ROBOT_FORWARD:
                 robot_forward();
@@ -133,12 +133,10 @@ int main(int argc, char** argv) {
                 robot_kick();
                 break;
             default:
-                robot_kick();
+                robot_nop();
                 break;
         }
 
-        j = j + 1;
-        if (j > 1950) { j = 0; }
     }
     return (EXIT_SUCCESS);
 }

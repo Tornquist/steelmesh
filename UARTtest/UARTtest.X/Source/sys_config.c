@@ -19,7 +19,6 @@ void setup_config(void)
     // disable watchdog and deadman timers
     WDTCONbits.ON = 0;
     DMTCONbits.ON = 0;
-
     
     // set all ports as outputs
     //TRISACLR = 0xFFFF;
@@ -28,7 +27,6 @@ void setup_config(void)
     TRISDCLR = 0xFFFF;
     TRISECLR = 0xFFFF;
     TRISFCLR = 0xFFFF;
-
 
     // set all ports as digital
     //ANSELACLR = 0xFFFF;
@@ -49,7 +47,7 @@ void setup_config(void)
     //COMPILES UNCOMMENTED, WE WERE JUST TRYING TO GET IT TO NOT SUCK
     
     // configure Output Compare (PWM)
-    OC1CON = 0x0000;
+/*  OC1CON = 0x0000;
     T2CON = 0x0000;
     //OC1CONbits.OC32 = 1;
     //T2CONSET = 0x0038;
@@ -62,7 +60,7 @@ void setup_config(void)
     //T2CONSET = 0x8000;    // enable timer 2
     //OC1CONSET = 0x8000;   // enable Output Compare (PWM)
 
-/*
+
     // output compare 2
     OC2CON = 0x0000;
     OC2R = 0x0064;        // set initial duty cycle

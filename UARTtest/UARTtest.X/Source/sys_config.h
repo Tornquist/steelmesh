@@ -10,9 +10,6 @@
 
 #include "system_include.h"
 
-//#define FPB 99000000L // Frequency Peripheral Bus = 99MHz
-#define BAUDRATE 9600
-
 void setup_config(void);
 
 void setup_pps(void);
