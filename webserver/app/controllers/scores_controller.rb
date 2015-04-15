@@ -19,6 +19,14 @@ class ScoresController < ApplicationController
     render :json => {"Team" => team_id, "Score" => score.points }.to_json
   end
 
+  def score_reset
+    s = Score.all
+    s.each do |score|
+      score.update(points:0)
+    end
+    render :nothing => true
+  end
+
 
   # GET /scores
   # GET /scores.json

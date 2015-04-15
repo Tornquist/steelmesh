@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   post '/score/', to: 'scores#score'
+  post '/score/reset', to: 'scores#score_reset'
   resources :scores
 
   get '/streams/bot1', to: 'streams#bot1'
