@@ -17,7 +17,9 @@ void fail_wait(void);
 
 void wifi_set_config(void);
 
-void wifi_set_real_config(void);
+void wifi_set_real_config(char id);
+
+void wifi_load_twitch(void);
 
 void wifi_open_connection(void);
 

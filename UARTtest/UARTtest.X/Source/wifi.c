@@ -105,7 +105,7 @@ void wifi_update_device(void) {
 //   wifi_set_real_config
 //   sets the configuration settings to connect to the wifi network and webserver
 //------------------------------------------------------------------------------
-void wifi_set_real_config() {
+void wifi_set_real_config(char id) {
     char *ENTER_CMD = "$$$";
     char *EXIT_CMD = "exit\r";
     char *SET_IP_PROTO = "set i p 18\r";
@@ -116,7 +116,8 @@ void wifi_set_real_config() {
     char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
     char *JOIN = "join\r";
     char *SET_COM_REMOTE_START = "set comm remote GET$/command/1?data=\r"; // string that begins every data transmission
-
+    SET_COM_REMOTE_START[29] = id;
+    
     // enter command mode
     tx_string(ENTER_CMD);
     if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
@@ -125,11 +126,12 @@ void wifi_set_real_config() {
     tx_string(SET_IP_PROTO);
     if(rx_string(strlen(SET_IP_PROTO) + 14) == WIFI_FAIL) { fail_wait(); }
 
+    tx_string(SET_WLAN_PHRASE);
+    if(rx_string(strlen(SET_WLAN_PHRASE) + 14) == WIFI_FAIL) { fail_wait(); }
+
     tx_string(SET_WLAN_SSID);
     if(rx_string(strlen(SET_WLAN_SSID) + 14) == WIFI_FAIL) { fail_wait(); }
 
-    tx_string(SET_WLAN_PHRASE);
-    if(rx_string(strlen(SET_WLAN_PHRASE) + 14) == WIFI_FAIL) { fail_wait(); }
 
     // set webserver port to 3000
     tx_string(SET_IP_REMOTE);
@@ -149,7 +151,43 @@ void wifi_set_real_config() {
 
     // Set the WiFi module to open a connection when UART data is received
     tx_string(JOIN);
+    if(rx_string(strlen(JOIN) + 100) == WIFI_FAIL) { fail_wait(); }
+
+    // exit command mode to go to data mode
+    tx_string(EXIT_CMD);
+    if(rx_string(strlen(EXIT_CMD)+1) == WIFI_FAIL) {
+        fail_wait();
+    }
+
+
+}
+
+
+void wifi_load_twitch() {
+    char *ENTER_CMD = "$$$";
+    char *EXIT_CMD = "exit\r";
+    char *SET_IP_PROTO = "set i p 18\r";
+    char *SET_WLAN_SSID = "set w s steelmesh\r";
+    char *SET_WLAN_PHRASE = "set w p wittytrain\r";
+    char *SET_IP_REMOTE = "set ip remote 3000\r"; // PORT NUMBER
+    char *SET_IP_HOST = "set ip host 192.168.1.7\r";  // turns on DNS
+    char *SET_UART_MODE = "set u m 2\r"; // UART data trigger mode
+    char *JOIN = "join\r";
+    char *SET_COM_REMOTE_START = "set comm remote GET$/command/1?data=\r"; // string that begins every data transmission
+
+    char * LOAD_TWITCH = "load twitch\r";
+
+    // enter command mode
+    tx_string(ENTER_CMD);
+    if(rx_string(3) == WIFI_FAIL) { fail_wait(); }
+
+    tx_string(LOAD_TWITCH);
+    if(rx_string(strlen(LOAD_TWITCH)+10) == WIFI_FAIL) { fail_wait(); }
+
+    // Set the WiFi module to open a connection when UART data is received
+    tx_string(JOIN);
     if(rx_string(strlen(JOIN) + 125) == WIFI_FAIL) { fail_wait(); }
+
 
     // exit command mode to go to data mode
     tx_string(EXIT_CMD);

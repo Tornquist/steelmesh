@@ -19,6 +19,6 @@ void robot_right(void);
 void robot_left(void);
 void robot_forward(void);
 void robot_back(void);
-void robot_kick(void);
+void robot_kick(char id);
 
 #endif	/* MOTOR_H */

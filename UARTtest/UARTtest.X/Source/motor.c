@@ -8,7 +8,7 @@
 #include "motor.h"
 #include "util.h"
 
-void robot_nop(void) { int i = 0; while(i<10000000){ i++; } }
+void robot_nop(void) { idle_delay(10000000); }
 
 void robot_move(int lDir, int rDir, int time)
 {
@@ -40,29 +40,52 @@ void robot_forward(void) { robot_move(1, 0, 800); }
 
 void robot_back(void) { robot_move(0, 1, 800); }
 
-void robot_kick(void) {
+void robot_kick(char id) {
     // 400 000 Total for entire kick cycle
     // High 32000 and Low 368000 = 90
     // High 10000 and Low 390000 = 0 = Down Completely
-    
     int j = 0;
-    while (j < 20) {
-        LATBbits.LATB2 = 1; // OC1, pin 14
-        idle_delay(32000);
 
-        LATBbits.LATB2 = 0; // OC1, pin 14
-        idle_delay(368000);
+    if (id == '1') {
+        while (j < 20) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            idle_delay(32000);
 
-        j = j + 1;
+            LATBbits.LATB2 = 0; // OC1, pin 14
+            idle_delay(368000);
+
+            j = j + 1;
+        }
+
+        j = 0;
+        while (j < 250) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            idle_delay(10000);
+
+            LATBbits.LATB2 = 0; // OC1, pin 14
+            idle_delay(360000);
+            j = j + 1;
+        }
     }
+    else {
+        while (j < 20) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            idle_delay(32000);
 
-    j = 0;
-    while (j < 250) {
-        LATBbits.LATB2 = 1; // OC1, pin 14
-        idle_delay(10000);
-        
-        LATBbits.LATB2 = 0; // OC1, pin 14
-        idle_delay(390000);
-        j = j + 1;
+            LATBbits.LATB2 = 0; // OC1, pin 14
+            idle_delay(368000);
+
+            j = j + 1;
+        }
+
+        j = 0;
+        while (j < 250) {
+            LATBbits.LATB2 = 1; // OC1, pin 14
+            idle_delay(50000);
+
+            LATBbits.LATB2 = 0; // OC1, pin 14
+            idle_delay(390000);
+            j = j + 1;
+        } 
     }
 }

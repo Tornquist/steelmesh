@@ -88,12 +88,17 @@ int main(int argc, char** argv) {
 
     id = destructive_device_id_read();
 
-    // Set Configuration for WiFi
-    //wifi_reboot();
-    //wifi_set_real_config();
+    robot_kick(id);
 
     idle_delay(10000000);
 
+    // Set Configuration for WiFi
+    wifi_reboot();
+    wifi_set_real_config(id);
+    //wifi_load_twitch();
+
+    idle_delay(10000000);
+/*
     //Robot Demo
     while(1) {
         robot_forward();
@@ -107,12 +112,14 @@ int main(int argc, char** argv) {
         robot_kick();
         robot_nop();
     }
-
+*/
 
     while (1) {
-        //action = rx_command();
-        action = ROBOT_KICK;
-                
+        action = rx_command();
+        //action = ROBOT_KICK;
+        
+        idle_delay(1000);
+
         switch(action) {
             case ROBOT_NOP:
                 robot_nop();
@@ -130,7 +137,7 @@ int main(int argc, char** argv) {
                 robot_right();
                 break;
             case ROBOT_KICK:
-                robot_kick();
+                robot_kick(id);
                 break;
             default:
                 robot_nop();
