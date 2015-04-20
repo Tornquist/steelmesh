@@ -8,7 +8,7 @@
 #include "motor.h"
 #include "util.h"
 
-void robot_nop(void) { idle_delay(10000000); }
+void robot_nop(void) { idle_delay(100000); }
 
 void robot_move(int lDir, int rDir, int time)
 {
@@ -58,7 +58,7 @@ void robot_kick(char id) {
         }
 
         j = 0;
-        while (j < 250) {
+        while (j < 40) {
             LATBbits.LATB2 = 1; // OC1, pin 14
             idle_delay(10000);
 
@@ -79,7 +79,7 @@ void robot_kick(char id) {
         }
 
         j = 0;
-        while (j < 250) {
+        while (j < 40) {
             LATBbits.LATB2 = 1; // OC1, pin 14
             idle_delay(50000);
 

@@ -22,7 +22,7 @@
 #include "util.h"
 
 
-#pragma config DEBUG =      ON
+#pragma config DEBUG =      OFF
 #pragma config JTAGEN =     OFF
 #pragma config ICESEL =     ICS_PGx1
 #pragma config TRCEN =      ON
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
     wifi_set_real_config(id);
     //wifi_load_twitch();
 
-    idle_delay(10000000);
+    idle_delay(100000000);
 /*
     //Robot Demo
     while(1) {
@@ -118,7 +118,7 @@ int main(int argc, char** argv) {
         action = rx_command();
         //action = ROBOT_KICK;
         
-        idle_delay(1000);
+        idle_delay(100000);
 
         switch(action) {
             case ROBOT_NOP:

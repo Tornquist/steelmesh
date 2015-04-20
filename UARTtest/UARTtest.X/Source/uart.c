@@ -45,10 +45,30 @@ void tx_char(unsigned char c)
 //  receives a command messge from the webserver and returns a flag based on
 //  what command was sent
 //------------------------------------------------------------------------------
+int scan_char(char c) {
+    switch(c) {
+        case 'n':
+            return 1;
+        case 'f':
+            return 1;
+        case 'b':
+            return 1;
+        case 'l':
+            return 1;
+        case 'r':
+            return 1;
+        case 'k':
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 int rx_command()
 {
     int i;
     char RESPONSE [15] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    char action = 'n';
 
     tx_string("paul\r\n");
 
@@ -59,7 +79,15 @@ int rx_command()
         }
     }
 
-    switch(RESPONSE[7]) {
+    for (i = 0; i < 15; i++)
+    {
+        if (scan_char(RESPONSE[i]) == 1) {
+            action = RESPONSE[i];
+            break;
+        }
+    }
+
+    switch(action) {
         case 'n':
             return ROBOT_NOP;
         case 'f':
@@ -121,7 +149,7 @@ char rx_char()
             U1STAbits.OERR = 0;
         }
         // if it has been waiting a really long time, exit
-        if(i == 1000000000) {
+        if(i == 100000000) {
             return 0x00;
         }
     }
